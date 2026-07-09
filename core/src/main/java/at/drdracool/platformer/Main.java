@@ -2,21 +2,34 @@ package at.drdracool.platformer;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.net.Socket;
 import com.badlogic.gdx.Net.Protocol;
 import com.badlogic.gdx.net.SocketHints;
+import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
-    ShapeRenderer shape;
+    FitViewport viewport;
+    SpriteBatch spriteBatch;
+    Texture knightTexture;
+    Sprite knightSprite;
 
     @Override
     public void create () {
-        shape = new ShapeRenderer();
+        viewport = new FitViewport(8, 5);
+        spriteBatch = new SpriteBatch();
+        knightTexture = new Texture("knight.png");
+        knightSprite = new Sprite(knightTexture);
+        knightSprite.setSize(1, 1);
 
         SocketHints hints = new SocketHints();
         Protocol protocol = Protocol.TCP;
@@ -38,9 +51,17 @@ public class Main extends ApplicationAdapter {
     }
 
     @Override
+    public void resize(int width, int height) {
+        viewport.update(width, height, true);
+    }
+
+    @Override
     public void render () {
-        shape.begin(ShapeRenderer.ShapeType.Filled);
-        shape.circle(50, 50, 50);
-        shape.end();
+        ScreenUtils.clear(Color.BLACK);
+        viewport.apply();
+        spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
+        spriteBatch.begin();
+        knightSprite.draw(spriteBatch);
+        spriteBatch.end();
     }
 }

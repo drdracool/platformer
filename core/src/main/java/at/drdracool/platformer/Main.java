@@ -2,11 +2,11 @@ package at.drdracool.platformer;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.Input;import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.net.Socket;
+import com.badlogic.gdx.math.MathUtils;import com.badlogic.gdx.net.Socket;
 import com.badlogic.gdx.Net.Protocol;
 import com.badlogic.gdx.net.SocketHints;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -22,6 +22,8 @@ public class Main extends ApplicationAdapter {
     SpriteBatch spriteBatch;
     Texture knightTexture;
     Sprite knightSprite;
+    Socket socket;
+    DataOutputStream dOut;
 
     @Override
     public void create () {
@@ -34,19 +36,9 @@ public class Main extends ApplicationAdapter {
         SocketHints hints = new SocketHints();
         Protocol protocol = Protocol.TCP;
 
-        Socket socket = Gdx.net.newClientSocket(protocol, "localhost", 8888, hints);
+        socket = Gdx.net.newClientSocket(protocol, "localhost", 8888, hints);
 
-        DataOutputStream dOut = new DataOutputStream(socket.getOutputStream());
-
-        try {
-            dOut.writeByte(1);
-            dOut.write("This is the first type of message.\r\n".getBytes());
-            dOut.flush(); // Send off the data
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } finally {
-            socket.dispose();
-        }
+        dOut = new DataOutputStream(socket.getOutputStream());
 
     }
 
@@ -57,11 +49,58 @@ public class Main extends ApplicationAdapter {
 
     @Override
     public void render () {
+        input();
+        logic();
+        draw();
+    }
+
+    private void input() {
+        float speed = 4f;
+        float delta = Gdx.graphics.getDeltaTime();
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
+            knightSprite.translateX(speed * delta);
+            notifyServerMovement();
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
+            knightSprite.translateX(-speed * delta);
+            notifyServerMovement();
+        }
+    }
+
+    private void notifyServerMovement() {
+        float knightX = knightSprite.getX();
+        float knightY = knightSprite.getY();
+        try {
+            dOut.write(String.format("%.2f %.2f\r\n", knightX,knightY).getBytes());
+            dOut.flush(); // Send off the data
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void logic() {
+        float worldWidth = viewport.getWorldWidth();
+        float worldHeight = viewport.getWorldHeight();
+        float knightWidth = knightSprite.getWidth();
+        float knightHeight = knightSprite.getHeight();
+
+        knightSprite.setX(MathUtils.clamp(knightSprite.getX(), 0, worldWidth - knightWidth));
+
+
+
+    }
+
+    private void draw() {
         ScreenUtils.clear(Color.BLACK);
         viewport.apply();
         spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
         spriteBatch.begin();
         knightSprite.draw(spriteBatch);
         spriteBatch.end();
+    }
+
+    @Override
+    public void dispose() {
+        socket.dispose();
     }
 }

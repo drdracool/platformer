@@ -23,26 +23,9 @@ public class Main extends ApplicationAdapter {
 
         Socket socket = Gdx.net.newClientSocket(protocol, "localhost", 8888, hints);
 
-        System.out.println("is connected? " + socket.isConnected());
-
-
         DataOutputStream dOut = new DataOutputStream(socket.getOutputStream());
 
         try {
-
-
-            dOut.write("This is the first type of message.".getBytes());
-            dOut.flush(); // Send off the data
-            dOut.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        /*
-
-        try {
-
-
             dOut.writeByte(1);
             dOut.write("This is the first type of message.\r\n".getBytes());
             dOut.flush(); // Send off the data
@@ -51,8 +34,6 @@ public class Main extends ApplicationAdapter {
         } finally {
             socket.dispose();
         }
-         */
-
 
     }
 

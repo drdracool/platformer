@@ -5,16 +5,17 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.MathUtils;import com.badlogic.gdx.net.Socket;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.net.ServerSocket;
+import com.badlogic.gdx.net.ServerSocketHints;
+import com.badlogic.gdx.net.Socket;
 import com.badlogic.gdx.Net.Protocol;
 import com.badlogic.gdx.net.SocketHints;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
@@ -22,8 +23,7 @@ public class Main extends ApplicationAdapter {
     SpriteBatch spriteBatch;
     Texture knightTexture;
     Sprite knightSprite;
-    Socket socket;
-    DataOutputStream dOut;
+    SocketClient socketClient;
 
     @Override
     public void create () {
@@ -33,13 +33,8 @@ public class Main extends ApplicationAdapter {
         knightSprite = new Sprite(knightTexture);
         knightSprite.setSize(1, 1);
 
-        SocketHints hints = new SocketHints();
-        Protocol protocol = Protocol.TCP;
-
-        socket = Gdx.net.newClientSocket(protocol, "localhost", 8888, hints);
-
-        dOut = new DataOutputStream(socket.getOutputStream());
-
+        socketClient = new SocketClient(knightSprite);
+        socketClient.connect("localhost", 8888);
     }
 
     @Override
@@ -59,20 +54,15 @@ public class Main extends ApplicationAdapter {
         float delta = Gdx.graphics.getDeltaTime();
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
-            knightSprite.translateX(speed * delta);
-            notifyServerMovement();
+            notifyServerMovement(knightSprite.getX() + speed * delta, knightSprite.getY());
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
-            knightSprite.translateX(-speed * delta);
-            notifyServerMovement();
+            notifyServerMovement(knightSprite.getX() - speed * delta, knightSprite.getY());
         }
     }
 
-    private void notifyServerMovement() {
-        float knightX = knightSprite.getX();
-        float knightY = knightSprite.getY();
+    private void notifyServerMovement(float locationX, float locationY) {
         try {
-            dOut.write(String.format("%.2f %.2f\r\n", knightX,knightY).getBytes());
-            dOut.flush(); // Send off the data
+            socketClient.sendMessage(String.format("%.2f %.2f", locationX, locationY));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -86,8 +76,6 @@ public class Main extends ApplicationAdapter {
 
         knightSprite.setX(MathUtils.clamp(knightSprite.getX(), 0, worldWidth - knightWidth));
 
-
-
     }
 
     private void draw() {
@@ -97,10 +85,5 @@ public class Main extends ApplicationAdapter {
         spriteBatch.begin();
         knightSprite.draw(spriteBatch);
         spriteBatch.end();
-    }
-
-    @Override
-    public void dispose() {
-        socket.dispose();
     }
 }

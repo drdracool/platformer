@@ -2,12 +2,9 @@ package at.drdracool.platformer;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.net.Socket;
 import com.badlogic.gdx.net.SocketHints;
 import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.JsonReader;
-import com.badlogic.gdx.utils.JsonValue;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,13 +17,17 @@ public class SocketClient {
     private BufferedReader bufferedReader;
     private OutputStreamWriter outputStreamWriter;
     private boolean connected = false;
-    private Sprite knightSprite;
+    private GameService gameService;
+    private String connectionId;
 
-    public SocketClient(Sprite knightSprite) {
-        this.knightSprite = knightSprite;
+    public SocketClient() {
     }
 
-    public void connect(String ip, int port) {
+    public void setGameService(GameService gameService) {
+        this.gameService = gameService;
+    }
+
+    public boolean connect(String ip, int port) {
         String serverString = "[" + ip + ":" + String.valueOf(port) + "]";
         try {
             SocketHints hints = new SocketHints();
@@ -40,11 +41,14 @@ public class SocketClient {
 
             startListeningThread();
 
-
-            if (connected) Gdx.app.log("Network", "Connected to socket server " + serverString + " successfully");
+            if (connected) {
+                Gdx.app.log("Network", "Connected to socket server " + serverString + " successfully");
+                return connected;
+            }
         } catch (Exception e) {
             Gdx.app.error("Network", "Error when trying to connect to socket server " + serverString);
         }
+        return false;
     }
 
     private void startListeningThread() {
@@ -62,10 +66,23 @@ public class SocketClient {
     }
 
     private void handleMessageOnMainThread(String message) {
-        Gdx.app.log("Nework-MainThread", "Received message from socket server: " + message);
-        Json json = new Json();
-        List<Character> characters = json.fromJson(List.class, message);
-        System.out.println(characters);
+        String[] fullMessage = message.split("\\|");
+        switch (fullMessage[0]) {
+            case("OnConnection"):
+                Gdx.app.log("Nework-MainThread", "Received connectionId from socket server: " + message);
+                this.connectionId = fullMessage[1];
+                break;
+            case("UpdateAllLocations"):
+                Json json = new Json();
+
+                List<Character> characters = json.fromJson(List.class, fullMessage[1]);
+                break;
+        }
+
+    }
+
+    public String getConnectionId() {
+        return connectionId;
     }
 
     public void sendMessage(String message) throws IOException {

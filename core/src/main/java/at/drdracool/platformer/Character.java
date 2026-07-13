@@ -1,24 +1,26 @@
 package at.drdracool.platformer;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
+
 public class Character {
-    String id;
+    String connectionId;
     float locationX;
     float locationY;
     String assetName;
 
-    public Character(String id, float locationX, float locationY, String assetName) {
-        this.id = id;
+    public Character(String connectionId, float locationX, float locationY, String assetName) {
+        this.connectionId = connectionId;
         this.locationX = locationX;
         this.locationY = locationY;
         this.assetName = assetName;
     }
 
-    public String getId() {
-        return id;
+    public String getConnectionId() {
+        return connectionId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setConnectionId(String connectionId) {
+        this.connectionId = connectionId;
     }
 
     public float getLocationX() {
@@ -44,4 +46,5 @@ public class Character {
     public void setAssetName(String assetName) {
         this.assetName = assetName;
     }
+
 }

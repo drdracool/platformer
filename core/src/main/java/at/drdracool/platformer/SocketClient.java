@@ -4,12 +4,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
 import com.badlogic.gdx.net.Socket;
 import com.badlogic.gdx.net.SocketHints;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class SocketClient {
@@ -74,8 +77,9 @@ public class SocketClient {
                 break;
             case("UpdateAllLocations"):
                 Json json = new Json();
-
-                List<Character> characters = json.fromJson(List.class, fullMessage[1]);
+                System.out.println(fullMessage[1]);
+                GameCharacter[] characters = json.fromJson(GameCharacter[].class, fullMessage[1]);
+                gameService.updateSpriteLocations(List.of(characters));
                 break;
         }
 

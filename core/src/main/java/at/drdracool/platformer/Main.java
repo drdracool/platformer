@@ -24,8 +24,9 @@ public class Main extends ApplicationAdapter {
         socketClient = new SocketClient();
         boolean connected = socketClient.connect("localhost", 8888);
         if (connected) {
-            gameService = new GameService(new HashMap<>(), socketClient.getConnectionId());
+            gameService = new GameService(socketClient.getConnectionId());
             gameService.setSocketClient(socketClient);
+            socketClient.setGameService(gameService);
             gameService.createInitialSprite();
         }
     }

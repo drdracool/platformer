@@ -9,20 +9,17 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class GameService {
-    HashMap<String, Character> characterHashMap;
     HashMap<String, Sprite> connectionSpriteMap;
     HashMap<String, Texture> texturePathMap;
     Texture knightTexture;
     String connectionId;
     SocketClient socketClient;
 
-    public GameService(HashMap<String, Character> characterHashMap, String connectionId) {
-        this.characterHashMap = characterHashMap;
+    public GameService(String connectionId) {
         knightTexture = new Texture("knight.png");
         connectionSpriteMap = new HashMap<>();
         texturePathMap = new HashMap<>();
@@ -38,13 +35,6 @@ public class GameService {
         Sprite sprite = new Sprite(knightTexture);
         sprite.setSize(1, 1);
         connectionSpriteMap.put(connectionId, sprite);
-        characterHashMap.put(connectionId, new Character(connectionId, 0f, 0f, "knight.png"));
-    }
-
-    public void updateCurrentConnectionId(String connectionId) {
-        this.connectionId = connectionId;
-        characterHashMap.put(connectionId, characterHashMap.get(""));
-        characterHashMap.remove("TEMP");
     }
 
     public void handleMoveLogic(FitViewport viewport) {
@@ -78,9 +68,23 @@ public class GameService {
         }
     }
 
-    public void updateCharacterLocations(List<Character> characters) {
-        for (var character : characters) {
-            var alreadyExist = characterHashMap.putIfAbsent(character.connectionId, character);
+    public void updateSpriteLocations(List<GameCharacter> gameCharacters) {
+        for (var character : gameCharacters) {
+            var connectionId = character.getConnectionId();
+            var alreadyExistSprite = connectionSpriteMap.get(connectionId);
+            if (alreadyExistSprite != null) {
+                if (alreadyExistSprite.getX() != character.getLocationX()) {
+                    alreadyExistSprite.setX(character.getLocationX());
+                } else if (alreadyExistSprite.getY() != character.getLocationY()) {
+                    alreadyExistSprite.setY(character.getLocationY());
+                }
+            } else {
+                Texture texture = texturePathMap.get(character.getAssetName());
+                Sprite sprite = new Sprite(texture);
+                sprite.setSize(1, 1);
+                sprite.setPosition(character.getLocationX(), character.getLocationY());
+                connectionSpriteMap.put(connectionId, sprite);
+            }
         }
     }
 }

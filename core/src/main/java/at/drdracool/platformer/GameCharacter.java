@@ -1,14 +1,16 @@
 package at.drdracool.platformer;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
-
-public class Character {
+public class GameCharacter {
     String connectionId;
     float locationX;
     float locationY;
     String assetName;
 
-    public Character(String connectionId, float locationX, float locationY, String assetName) {
+    public GameCharacter() {
+
+    }
+
+    public GameCharacter(String connectionId, float locationX, float locationY, String assetName) {
         this.connectionId = connectionId;
         this.locationX = locationX;
         this.locationY = locationY;

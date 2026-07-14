@@ -44,7 +44,6 @@ public class GameService {
     }
 
     public void drawSprites(SpriteBatch spriteBatch) {
-        System.out.println("the number of sprites: " + connectionSpriteMap.values().size());
         for (var sprite : connectionSpriteMap.values()) {
             sprite.draw(spriteBatch);
         }
@@ -52,9 +51,13 @@ public class GameService {
 
     public void handleMoveInput() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
+            System.out.println("right was pressed");
             notifyServerMovement("RIGHT");
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
             notifyServerMovement("LEFT");
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
+            System.out.println("up was pressed");
+            notifyServerMovement("JUMP");
         }
     }
 
@@ -71,7 +74,6 @@ public class GameService {
             var connectionId = character.getConnectionId();
             var alreadyExistSprite = connectionSpriteMap.get(connectionId);
             if (alreadyExistSprite != null) {
-                System.out.println("this character already exist: " + connectionId);
                 if (alreadyExistSprite.getX() != character.getLocationX()) {
                     alreadyExistSprite.setX(character.getLocationX());
                 } else if (alreadyExistSprite.getY() != character.getLocationY()) {

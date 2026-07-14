@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import java.io.IOException;
@@ -19,15 +20,11 @@ public class GameService {
     String connectionId;
     SocketClient socketClient;
 
-    public GameService(String connectionId) {
+    public GameService(SocketClient socketClient) {
         knightTexture = new Texture("knight.png");
         connectionSpriteMap = new HashMap<>();
         texturePathMap = new HashMap<>();
         texturePathMap.put("knight.png", knightTexture);
-        this.connectionId = connectionId;
-    }
-
-    public void setSocketClient(SocketClient socketClient) {
         this.socketClient = socketClient;
     }
 
@@ -47,6 +44,7 @@ public class GameService {
     }
 
     public void drawSprites(SpriteBatch spriteBatch) {
+        System.out.println("the number of sprites: " + connectionSpriteMap.values().size());
         for (var sprite : connectionSpriteMap.values()) {
             sprite.draw(spriteBatch);
         }
@@ -73,18 +71,36 @@ public class GameService {
             var connectionId = character.getConnectionId();
             var alreadyExistSprite = connectionSpriteMap.get(connectionId);
             if (alreadyExistSprite != null) {
+                System.out.println("this character already exist: " + connectionId);
                 if (alreadyExistSprite.getX() != character.getLocationX()) {
                     alreadyExistSprite.setX(character.getLocationX());
                 } else if (alreadyExistSprite.getY() != character.getLocationY()) {
                     alreadyExistSprite.setY(character.getLocationY());
                 }
             } else {
+                System.out.println("creating new character: " + connectionId);
                 Texture texture = texturePathMap.get(character.getAssetName());
                 Sprite sprite = new Sprite(texture);
                 sprite.setSize(1, 1);
                 sprite.setPosition(character.getLocationX(), character.getLocationY());
                 connectionSpriteMap.put(connectionId, sprite);
             }
+        }
+    }
+
+    public void handleIncomingMessage(String message) {
+        String[] fullMessage = message.split("\\|");
+        switch (fullMessage[0]) {
+            case("OnConnection"):
+                Gdx.app.log("Nework-MainThread", "Received connectionId from socket server: " + message);
+                this.connectionId = fullMessage[1];
+                createInitialSprite();
+                break;
+            case("UpdateAllLocations"):
+                Json json = new Json();
+                GameCharacter[] characters = json.fromJson(GameCharacter[].class, fullMessage[1]);
+                updateSpriteLocations(List.of(characters));
+                break;
         }
     }
 }

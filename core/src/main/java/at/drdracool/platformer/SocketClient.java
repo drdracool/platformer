@@ -4,33 +4,24 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
 import com.badlogic.gdx.net.Socket;
 import com.badlogic.gdx.net.SocketHints;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Json;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.function.Consumer;
 
 public class SocketClient {
     private Socket socket;
     private BufferedReader bufferedReader;
     private OutputStreamWriter outputStreamWriter;
     private boolean connected = false;
-    private GameService gameService;
-    private String connectionId;
+    private Consumer<String> messageHandler;
 
     public SocketClient() {
     }
 
-    public void setGameService(GameService gameService) {
-        this.gameService = gameService;
-    }
-
-    public boolean connect(String ip, int port) {
+    public void connect(String ip, int port) {
         String serverString = "[" + ip + ":" + String.valueOf(port) + "]";
         try {
             SocketHints hints = new SocketHints();
@@ -46,12 +37,10 @@ public class SocketClient {
 
             if (connected) {
                 Gdx.app.log("Network", "Connected to socket server " + serverString + " successfully");
-                return connected;
             }
         } catch (Exception e) {
             Gdx.app.error("Network", "Error when trying to connect to socket server " + serverString);
         }
-        return false;
     }
 
     private void startListeningThread() {
@@ -68,25 +57,14 @@ public class SocketClient {
         }).start();
     }
 
-    private void handleMessageOnMainThread(String message) {
-        String[] fullMessage = message.split("\\|");
-        switch (fullMessage[0]) {
-            case("OnConnection"):
-                Gdx.app.log("Nework-MainThread", "Received connectionId from socket server: " + message);
-                this.connectionId = fullMessage[1];
-                break;
-            case("UpdateAllLocations"):
-                Json json = new Json();
-                System.out.println(fullMessage[1]);
-                GameCharacter[] characters = json.fromJson(GameCharacter[].class, fullMessage[1]);
-                gameService.updateSpriteLocations(List.of(characters));
-                break;
-        }
-
+    public void setMessageHandler(Consumer<String> handler) {
+        this.messageHandler = handler;
     }
 
-    public String getConnectionId() {
-        return connectionId;
+    private void handleMessageOnMainThread(String message) {
+        if (messageHandler != null) {
+            messageHandler.accept(message);
+        }
     }
 
     public void sendMessage(String message) throws IOException {

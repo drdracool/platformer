@@ -22,13 +22,9 @@ public class Main extends ApplicationAdapter {
         viewport = new FitViewport(8, 5);
         spriteBatch = new SpriteBatch();
         socketClient = new SocketClient();
-        boolean connected = socketClient.connect("localhost", 8888);
-        if (connected) {
-            gameService = new GameService(socketClient.getConnectionId());
-            gameService.setSocketClient(socketClient);
-            socketClient.setGameService(gameService);
-            gameService.createInitialSprite();
-        }
+        gameService = new GameService(socketClient);
+        socketClient.setMessageHandler(gameService::handleIncomingMessage);
+        socketClient.connect("localhost", 8888);
     }
 
     @Override

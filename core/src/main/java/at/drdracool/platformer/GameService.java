@@ -18,14 +18,12 @@ public class GameService {
     HashMap<String, Texture> texturePathMap;
     Texture knightTexture;
     String connectionId;
-    SocketClient socketClient;
 
-    public GameService(SocketClient socketClient) {
+    public GameService() {
         knightTexture = new Texture("knight.png");
         connectionSpriteMap = new HashMap<>();
         texturePathMap = new HashMap<>();
         texturePathMap.put("knight.png", knightTexture);
-        this.socketClient = socketClient;
     }
 
     public void createInitialSprite() {
@@ -46,26 +44,6 @@ public class GameService {
     public void drawSprites(SpriteBatch spriteBatch) {
         for (var sprite : connectionSpriteMap.values()) {
             sprite.draw(spriteBatch);
-        }
-    }
-
-    public void handleMoveInput() {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
-            System.out.println("right was pressed");
-            notifyServerMovement("RIGHT");
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
-            notifyServerMovement("LEFT");
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-            System.out.println("up was pressed");
-            notifyServerMovement("JUMP");
-        }
-    }
-
-    private void notifyServerMovement(String command) {
-        try {
-            socketClient.sendMessage(command);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 

@@ -1,6 +1,7 @@
 package at.drdracool.platformer;
 
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -16,15 +17,18 @@ public class Main extends ApplicationAdapter {
     SpriteBatch spriteBatch;
     SocketClient socketClient;
     GameService gameService;
+    InputHandler inputHandler;
 
     @Override
     public void create () {
         viewport = new FitViewport(8, 5);
         spriteBatch = new SpriteBatch();
         socketClient = new SocketClient();
-        gameService = new GameService(socketClient);
+        gameService = new GameService();
         socketClient.setMessageHandler(gameService::handleIncomingMessage);
         socketClient.connect("localhost", 8888);
+        inputHandler = new InputHandler(socketClient);
+        Gdx.input.setInputProcessor(inputHandler);
     }
 
     @Override
@@ -40,7 +44,7 @@ public class Main extends ApplicationAdapter {
     }
 
     private void input() {
-        gameService.handleMoveInput();
+        inputHandler.handleKeyPressed();
     }
 
     private void logic() {

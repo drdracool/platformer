@@ -9,7 +9,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -72,10 +71,15 @@ public class GameService {
     public void handleIncomingMessage(String message) {
         String[] fullMessage = message.split("\\|");
         switch (fullMessage[0]) {
-            case("OnConnection"):
-                Gdx.app.log("Nework-MainThread", "Received connectionId from socket server: " + message);
+            case("OnConnectionOpen"):
+                Gdx.app.log("Nework-MainThread", "Received new connectionId from socket server: " + message);
                 this.connectionId = fullMessage[1];
                 createInitialSprite();
+                break;
+            case("OnConnectionClose"):
+                Gdx.app.log("Nework-MainThread", "Received connection close request from socket server: " + message);
+                String connectionId = fullMessage[1];
+                connectionSpriteMap.remove(connectionId);
                 break;
             case("UpdateAllLocations"):
                 Json json = new Json();

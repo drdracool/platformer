@@ -54,7 +54,8 @@ public class GameService {
             if (alreadyExistSprite != null) {
                 if (alreadyExistSprite.getX() != character.getLocationX()) {
                     alreadyExistSprite.setX(character.getLocationX());
-                } else if (alreadyExistSprite.getY() != character.getLocationY()) {
+                }
+                if (alreadyExistSprite.getY() != character.getLocationY()) {
                     alreadyExistSprite.setY(character.getLocationY());
                 }
             } else {

@@ -44,7 +44,6 @@ public class Main extends ApplicationAdapter {
     }
 
     private void input() {
-        inputHandler.handleKeyPressed();
     }
 
     private void logic() {

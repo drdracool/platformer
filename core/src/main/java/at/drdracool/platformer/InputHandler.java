@@ -1,9 +1,7 @@
 package at.drdracool.platformer;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.InputProcessor;
 
 import java.io.IOException;
 
@@ -13,6 +11,8 @@ public class InputHandler extends InputAdapter {
     public InputHandler(SocketClient socketClient) {
         this.socketClient = socketClient;
     }
+
+    @Override
     public boolean keyDown(int keycode) {
         boolean keyProcessed = false;
         switch (keycode) {
@@ -36,19 +36,21 @@ public class InputHandler extends InputAdapter {
     }
 
     public boolean keyUp (int keycode) {
-        return false;
-    }
-
-    public void handleKeyPressed(){
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            notifyServerMovement("LEFT");
+        boolean keyProcessed = false;
+        switch (keycode) {
+            case Input.Keys.LEFT:
+            case Input.Keys.RIGHT:
+                System.out.println("Finished pressing left or right");
+                notifyServerMovement("STOP_MOVING");
+                keyProcessed = true;
+                break;
+            case Input.Keys.UP:
+                System.out.println("Finished pressing up");
+                notifyServerMovement("STOP_JUMPING");
+                keyProcessed = true;
+                break;
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            notifyServerMovement("RIGHT");
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            notifyServerMovement("UP");
-        }
+        return keyProcessed;
     }
 
     public void notifyServerMovement(String command) {

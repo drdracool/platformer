@@ -1,7 +1,6 @@
 package at.drdracool.platformer;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -9,26 +8,39 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class GameService {
     HashMap<String, Sprite> connectionSpriteMap;
+    List<Sprite> blockSpriteList;
     HashMap<String, Texture> texturePathMap;
     Texture knightTexture;
+    Texture wallTexture;
     String connectionId;
+
 
     public GameService() {
         knightTexture = new Texture("knight.png");
+        wallTexture = new Texture("wall.png");
         connectionSpriteMap = new HashMap<>();
         texturePathMap = new HashMap<>();
         texturePathMap.put("knight.png", knightTexture);
+        texturePathMap.put("wall.png", wallTexture);
+        blockSpriteList = new ArrayList<>();
     }
 
     public void createInitialSprite() {
         Sprite sprite = new Sprite(knightTexture);
         sprite.setSize(1, 1);
         connectionSpriteMap.put(connectionId, sprite);
+    }
+
+    public void createBlockSprite(Block block) {
+        Sprite sprite = new Sprite(wallTexture, block.getWidth(), block.getHeight());
+        sprite.setPosition(block.getLocationX(), block.getLocationY());
+        blockSpriteList.add(sprite);
     }
 
     public void handleMoveLogic(FitViewport viewport) {
@@ -42,6 +54,9 @@ public class GameService {
 
     public void drawSprites(SpriteBatch spriteBatch) {
         for (var sprite : connectionSpriteMap.values()) {
+            sprite.draw(spriteBatch);
+        }
+        for (var sprite : blockSpriteList) {
             sprite.draw(spriteBatch);
         }
     }
@@ -70,6 +85,7 @@ public class GameService {
 
     public void handleIncomingMessage(String message) {
         String[] fullMessage = message.split("\\|");
+        Json json = new Json();
         switch (fullMessage[0]) {
             case("OnConnectionOpen"):
                 Gdx.app.log("Nework-MainThread", "Received new connectionId from socket server: " + message);
@@ -82,10 +98,14 @@ public class GameService {
                 connectionSpriteMap.remove(connectionId);
                 break;
             case("UpdateAllLocations"):
-                Json json = new Json();
                 GameCharacter[] characters = json.fromJson(GameCharacter[].class, fullMessage[1]);
                 updateSpriteLocations(List.of(characters));
                 break;
+            case("SendAllBlocks"):
+                Block[] blocks = json.fromJson(Block[].class, fullMessage[1]);
+                for (var block : blocks) {
+                    createBlockSprite(block);
+                }
         }
     }
 }

@@ -39,9 +39,13 @@ public class InputHandler extends InputAdapter {
         boolean keyProcessed = false;
         switch (keycode) {
             case Input.Keys.LEFT:
+                System.out.println("Finished pressing left");
+                notifyServerMovement("STOP_LEFT");
+                keyProcessed = true;
+                break;
             case Input.Keys.RIGHT:
-                System.out.println("Finished pressing left or right");
-                notifyServerMovement("STOP_MOVING");
+                System.out.println("Finished pressing right");
+                notifyServerMovement("STOP_RIGHT");
                 keyProcessed = true;
                 break;
             case Input.Keys.UP:

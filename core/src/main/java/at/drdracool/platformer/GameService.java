@@ -1,9 +1,10 @@
 package at.drdracool.platformer;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -13,72 +14,52 @@ import java.util.HashMap;
 import java.util.List;
 
 public class GameService {
-    HashMap<String, Sprite> connectionSpriteMap;
-    List<Sprite> blockSpriteList;
-    HashMap<String, Texture> texturePathMap;
-    Texture knightTexture;
-    Texture wallTexture;
+    HashMap<String, GameCharacter> connectionCharacterMap;
+    List<Block> blockList;
     String connectionId;
 
 
     public GameService() {
-        knightTexture = new Texture("knight.png");
-        wallTexture = new Texture("wall.png");
-        connectionSpriteMap = new HashMap<>();
-        texturePathMap = new HashMap<>();
-        texturePathMap.put("knight.png", knightTexture);
-        texturePathMap.put("wall.png", wallTexture);
-        blockSpriteList = new ArrayList<>();
-    }
-
-    public void createInitialSprite() {
-        Sprite sprite = new Sprite(knightTexture);
-        sprite.setSize(1, 1);
-        connectionSpriteMap.put(connectionId, sprite);
-    }
-
-    public void createBlockSprite(Block block) {
-        Sprite sprite = new Sprite(wallTexture, block.getWidth(), block.getHeight());
-        sprite.setPosition(block.getLocationX(), block.getLocationY());
-        blockSpriteList.add(sprite);
+        connectionCharacterMap = new HashMap<>();
+        blockList = new ArrayList<>();
     }
 
     public void handleMoveLogic(FitViewport viewport) {
         float worldWidth = viewport.getWorldWidth();
 
-        for (var sprite : connectionSpriteMap.values()) {
-            float spriteWidth = sprite.getWidth();
-            sprite.setX(MathUtils.clamp(sprite.getX(), 0, worldWidth - spriteWidth));
+        for (var character : connectionCharacterMap.values()) {
+            float spriteWidth = character.getWidth();
+            character.setLocationX(MathUtils.clamp(character.getLocationX(), 0, worldWidth - spriteWidth));
         }
     }
 
-    public void drawSprites(SpriteBatch spriteBatch) {
-        for (var sprite : connectionSpriteMap.values()) {
-            sprite.draw(spriteBatch);
+    public void drawBlocks(ShapeRenderer shape, OrthographicCamera camera) {
+        for (var character : connectionCharacterMap.values()) {
+            shape.begin(ShapeRenderer.ShapeType.Filled);
+            shape.setColor(new Color(0.42f, 0.52f, 1.19f, 1));
+            System.out.println("character.getLocationX(): " + character.getLocationX());
+            shape.rect(character.getLocationX(), character.getLocationY(), character.getWidth(), character.getHeight());
+            shape.end();
         }
-        for (var sprite : blockSpriteList) {
-            sprite.draw(spriteBatch);
+        for (var block : blockList) {
+            shape.begin(ShapeRenderer.ShapeType.Filled);
+            shape.setColor(new Color(0.52f, 1.52f, 2.19f, 1));
+            shape.rect(block.getLocationX(), block.getLocationY(), block.getWidth(), block.getHeight());
+            shape.end();
         }
     }
 
-    public void updateSpriteLocations(List<GameCharacter> gameCharacters) {
+    public void updateCharacterLocations(List<GameCharacter> gameCharacters) {
         for (var character : gameCharacters) {
             var connectionId = character.getConnectionId();
-            var alreadyExistSprite = connectionSpriteMap.get(connectionId);
-            if (alreadyExistSprite != null) {
-                if (alreadyExistSprite.getX() != character.getLocationX()) {
-                    alreadyExistSprite.setX(character.getLocationX());
-                }
-                if (alreadyExistSprite.getY() != character.getLocationY()) {
-                    alreadyExistSprite.setY(character.getLocationY());
-                }
+            var alreadyExistCharacter = connectionCharacterMap.get(connectionId);
+            if (alreadyExistCharacter != null) {
+                System.out.println("passed in location: " + character.getLocationX());
+                alreadyExistCharacter.setLocationX(character.getLocationX());
+                alreadyExistCharacter.setLocationY(character.getLocationY());
             } else {
                 System.out.println("creating new character: " + connectionId);
-                Texture texture = texturePathMap.get(character.getAssetName());
-                Sprite sprite = new Sprite(texture);
-                sprite.setSize(1, 1);
-                sprite.setPosition(character.getLocationX(), character.getLocationY());
-                connectionSpriteMap.put(connectionId, sprite);
+                connectionCharacterMap.put(connectionId, character);
             }
         }
     }
@@ -90,22 +71,21 @@ public class GameService {
             case("OnConnectionOpen"):
                 Gdx.app.log("Nework-MainThread", "Received new connectionId from socket server: " + message);
                 this.connectionId = fullMessage[1];
-                createInitialSprite();
+                GameCharacter ownCharacter = json.fromJson(GameCharacter.class, fullMessage[2]);
+                connectionCharacterMap.put(connectionId, ownCharacter);
                 break;
             case("OnConnectionClose"):
                 Gdx.app.log("Nework-MainThread", "Received connection close request from socket server: " + message);
                 String connectionId = fullMessage[1];
-                connectionSpriteMap.remove(connectionId);
+                connectionCharacterMap.remove(connectionId);
                 break;
             case("UpdateAllLocations"):
                 GameCharacter[] characters = json.fromJson(GameCharacter[].class, fullMessage[1]);
-                updateSpriteLocations(List.of(characters));
+                updateCharacterLocations(List.of(characters));
                 break;
             case("SendAllBlocks"):
                 Block[] blocks = json.fromJson(Block[].class, fullMessage[1]);
-                for (var block : blocks) {
-                    createBlockSprite(block);
-                }
+                blockList = List.of(blocks);
         }
     }
 }

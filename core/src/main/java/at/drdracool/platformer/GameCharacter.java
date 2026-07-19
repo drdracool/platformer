@@ -4,17 +4,19 @@ public class GameCharacter {
     String connectionId;
     float locationX;
     float locationY;
-    String assetName;
+    float width;
+    float height;
 
     public GameCharacter() {
 
     }
 
-    public GameCharacter(String connectionId, float locationX, float locationY, String assetName) {
+    public GameCharacter(String connectionId, float locationX, float locationY, float width, float height) {
         this.connectionId = connectionId;
         this.locationX = locationX;
         this.locationY = locationY;
-        this.assetName = assetName;
+        this.width = width;
+        this.height = height;
     }
 
     public String getConnectionId() {
@@ -41,12 +43,20 @@ public class GameCharacter {
         this.locationY = locationY;
     }
 
-    public String getAssetName() {
-        return assetName;
+    public float getWidth() {
+        return width;
     }
 
-    public void setAssetName(String assetName) {
-        this.assetName = assetName;
+    public void setWidth(float width) {
+        this.width = width;
+    }
+
+    public float getHeight() {
+        return height;
+    }
+
+    public void setHeight(float height) {
+        this.height = height;
     }
 
 }

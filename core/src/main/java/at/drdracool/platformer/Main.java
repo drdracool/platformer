@@ -2,7 +2,9 @@ package at.drdracool.platformer;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -12,15 +14,17 @@ import java.io.*;
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
     FitViewport viewport;
-    SpriteBatch spriteBatch;
     SocketClient socketClient;
     GameService gameService;
     InputHandler inputHandler;
+    ShapeRenderer shape;
+    OrthographicCamera camera;
 
     @Override
     public void create () {
-        viewport = new FitViewport(8, 5);
-        spriteBatch = new SpriteBatch();
+        shape = new ShapeRenderer();
+        camera = new OrthographicCamera();
+        viewport = new FitViewport(5, 3.8f);
         socketClient = new SocketClient();
         gameService = new GameService();
         socketClient.setMessageHandler(gameService::handleIncomingMessage);
@@ -45,15 +49,11 @@ public class Main extends ApplicationAdapter {
     }
 
     private void logic() {
-        gameService.handleMoveLogic(viewport);
     }
 
     private void draw() {
         ScreenUtils.clear(Color.BLACK);
         viewport.apply();
-        spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
-        spriteBatch.begin();
-        gameService.drawSprites(spriteBatch);
-        spriteBatch.end();
+        gameService.drawBlocks(shape, camera);
     }
 }

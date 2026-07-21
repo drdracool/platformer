@@ -3,7 +3,6 @@ package at.drdracool.platformer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Json;
@@ -16,34 +15,32 @@ import java.util.List;
 public class GameService {
     HashMap<String, GameCharacter> connectionCharacterMap;
     List<Block> blockList;
+    List<Block> movingBlockList;
     String connectionId;
 
 
     public GameService() {
         connectionCharacterMap = new HashMap<>();
         blockList = new ArrayList<>();
-    }
-
-    public void handleMoveLogic(FitViewport viewport) {
-        float worldWidth = viewport.getWorldWidth();
-
-        for (var character : connectionCharacterMap.values()) {
-            float spriteWidth = character.getWidth();
-            character.setLocationX(MathUtils.clamp(character.getLocationX(), 0, worldWidth - spriteWidth));
-        }
+        movingBlockList = new ArrayList<>();
     }
 
     public void drawBlocks(ShapeRenderer shape, OrthographicCamera camera) {
         for (var character : connectionCharacterMap.values()) {
             shape.begin(ShapeRenderer.ShapeType.Filled);
             shape.setColor(new Color(0.42f, 0.52f, 1.19f, 1));
-            System.out.println("character.getLocationX(): " + character.getLocationX());
             shape.rect(character.getLocationX(), character.getLocationY(), character.getWidth(), character.getHeight());
             shape.end();
         }
         for (var block : blockList) {
             shape.begin(ShapeRenderer.ShapeType.Filled);
             shape.setColor(new Color(0.52f, 1.52f, 2.19f, 1));
+            shape.rect(block.getLocationX(), block.getLocationY(), block.getWidth(), block.getHeight());
+            shape.end();
+        }
+        for (var block : movingBlockList) {
+            shape.begin(ShapeRenderer.ShapeType.Filled);
+            shape.setColor(new Color(0.32f, 1.32f, 1.19f, 1));
             shape.rect(block.getLocationX(), block.getLocationY(), block.getWidth(), block.getHeight());
             shape.end();
         }
@@ -79,13 +76,17 @@ public class GameService {
                 String connectionId = fullMessage[1];
                 connectionCharacterMap.remove(connectionId);
                 break;
-            case("UpdateAllLocations"):
+            case("UpdateAllCharacterLocations"):
                 GameCharacter[] characters = json.fromJson(GameCharacter[].class, fullMessage[1]);
                 updateCharacterLocations(List.of(characters));
                 break;
             case("SendAllBlocks"):
                 Block[] blocks = json.fromJson(Block[].class, fullMessage[1]);
                 blockList = List.of(blocks);
+            case("UpdateAllMovingBlockLocations"):
+                Block[] movingBlocks = json.fromJson(Block[].class, fullMessage[1]);
+                movingBlockList = List.of(movingBlocks);
+                System.out.println("moving block list size: " + movingBlockList.size());
         }
     }
 }

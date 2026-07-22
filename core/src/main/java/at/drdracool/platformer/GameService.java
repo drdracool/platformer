@@ -4,9 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -86,7 +84,6 @@ public class GameService {
             case("UpdateAllMovingBlockLocations"):
                 Block[] movingBlocks = json.fromJson(Block[].class, fullMessage[1]);
                 movingBlockList = List.of(movingBlocks);
-                System.out.println("moving block list size: " + movingBlockList.size());
         }
     }
 }

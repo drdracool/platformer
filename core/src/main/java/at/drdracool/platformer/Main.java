@@ -2,6 +2,7 @@ package at.drdracool.platformer;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -19,6 +20,7 @@ public class Main extends ApplicationAdapter {
     InputHandler inputHandler;
     ShapeRenderer shape;
     OrthographicCamera camera;
+    FPSLogger fpsLogger;
 
     @Override
     public void create () {
@@ -31,6 +33,7 @@ public class Main extends ApplicationAdapter {
         socketClient.connect("localhost", 8888);
         inputHandler = new InputHandler(socketClient);
         Gdx.input.setInputProcessor(inputHandler);
+        fpsLogger = new FPSLogger();
     }
 
     @Override
@@ -40,6 +43,7 @@ public class Main extends ApplicationAdapter {
 
     @Override
     public void render () {
+        fpsLogger.log();
         input();
         logic();
         draw();

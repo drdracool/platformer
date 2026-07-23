@@ -15,6 +15,10 @@ public class GameScreen implements Screen {
 
     public GameScreen(Platformer game) {
         this.game = game;
+    }
+
+    @Override
+    public void show() {
         fpsLogger = new FPSLogger();
         socketClient = new SocketClient();
         gameService = new GameService();
@@ -22,11 +26,6 @@ public class GameScreen implements Screen {
         socketClient.connect("localhost", 8888);
         inputHandler = new InputHandler(socketClient);
         Gdx.input.setInputProcessor(inputHandler);
-    }
-
-    @Override
-    public void show() {
-
     }
 
     @Override

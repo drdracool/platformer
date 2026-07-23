@@ -3,6 +3,7 @@ package at.drdracool.platformer;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.FPSLogger;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -25,13 +26,13 @@ public class Platformer extends Game {
         font = new BitmapFont();
 
         font.setUseIntegerPositions(false);
-        font.getData().setScale(viewport.getWorldHeight() / Gdx.graphics.getHeight());
+        font.getData().setScale(viewport.getWorldHeight() / Gdx.graphics.getHeight() * 2);
         shape = new ShapeRenderer();
         camera = new OrthographicCamera();
 
         initScreens();
 
-        this.setScreen(gameScreen);
+        this.setScreen(mainMenuScreen);
     }
 
     private void initScreens() {
@@ -49,6 +50,9 @@ public class Platformer extends Game {
     }
 
     public void render() {
+
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         super.render();
     }
 

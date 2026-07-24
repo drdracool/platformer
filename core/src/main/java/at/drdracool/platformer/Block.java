@@ -4,31 +4,26 @@ import java.awt.*;
 
 public class Block {
 
-    float locationX;
-    float locationY;
+    Pair location;
     Integer width;
     Integer height;
-    Rectangle bounds = new Rectangle();
 
     public Block() {
 
     }
 
-    public Block(float locationX, float locationY, Integer width, Integer height) {
-        this.locationX = locationX;
-        this.locationY = locationY;
+    public Block(Pair location, Integer width, Integer height) {
+        this.location = location;
         this.width = width;
         this.height = height;
-        this.bounds.width = width;
-        this.bounds.height = height;
     }
 
-    public float getLocationX() {
-        return locationX;
+    public Pair getLocation() {
+        return location;
     }
 
-    public float getLocationY() {
-        return locationY;
+    public void setLocation(Pair location) {
+        this.location = location;
     }
 
     public Integer getWidth() {
@@ -39,8 +34,5 @@ public class Block {
         return height;
     }
 
-    public Rectangle getBounds() {
-        return bounds;
-    }
 
 }

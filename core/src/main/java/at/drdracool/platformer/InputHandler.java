@@ -18,17 +18,17 @@ public class InputHandler extends InputAdapter {
         switch (keycode) {
             case Input.Keys.LEFT:
                 System.out.println("Pressed Left");
-                notifyServerMovement("LEFT");
+                notifyServerMovement("MOVE|LEFT");
                 keyProcessed = true;
                 break;
             case Input.Keys.RIGHT:
                 System.out.println("Pressed Right");
-                notifyServerMovement("RIGHT");
+                notifyServerMovement("MOVE|RIGHT");
                 keyProcessed = true;
                 break;
             case Input.Keys.UP:
                 System.out.println("Pressed Up");
-                notifyServerMovement("JUMP");
+                notifyServerMovement("MOVE|JUMP");
                 keyProcessed = true;
                 break;
         }
@@ -40,17 +40,17 @@ public class InputHandler extends InputAdapter {
         switch (keycode) {
             case Input.Keys.LEFT:
                 System.out.println("Finished pressing left");
-                notifyServerMovement("STOP_LEFT");
+                notifyServerMovement("MOVE|STOP_LEFT");
                 keyProcessed = true;
                 break;
             case Input.Keys.RIGHT:
                 System.out.println("Finished pressing right");
-                notifyServerMovement("STOP_RIGHT");
+                notifyServerMovement("MOVE|STOP_RIGHT");
                 keyProcessed = true;
                 break;
             case Input.Keys.UP:
                 System.out.println("Finished pressing up");
-                notifyServerMovement("STOP_JUMPING");
+                notifyServerMovement("MOVE|STOP_JUMPING");
                 keyProcessed = true;
                 break;
         }

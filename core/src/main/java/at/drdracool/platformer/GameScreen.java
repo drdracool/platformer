@@ -6,26 +6,28 @@ import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.graphics.Color;
 
+import java.io.IOException;
+
 public class GameScreen implements Screen {
     Platformer game;
     FPSLogger fpsLogger;
-    SocketClient socketClient;
     GameService gameService;
-    InputHandler inputHandler;
 
-    public GameScreen(Platformer game) {
+    public GameScreen(Platformer game, GameService gameService) {
         this.game = game;
+        this.gameService = gameService;
     }
 
     @Override
     public void show() {
         fpsLogger = new FPSLogger();
-        socketClient = new SocketClient();
-        gameService = new GameService();
-        socketClient.setMessageHandler(gameService::handleIncomingMessage);
-        socketClient.connect("localhost", 8888);
-        inputHandler = new InputHandler(socketClient);
-        Gdx.input.setInputProcessor(inputHandler);
+        Gdx.input.setInputProcessor(game.inputHandler);
+
+        try {
+            game.startGame();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -35,8 +37,9 @@ public class GameScreen implements Screen {
     }
 
     private void draw() {
+        System.out.println("rendering");
         ScreenUtils.clear(Color.BLACK);
-        gameService.drawBlocks(game.shape, game.camera);
+        gameService.drawCharactersAndBlocks(game.shape);
     }
 
     @Override
@@ -62,6 +65,23 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
 
+    }
+
+    public void handlePlayMessage(String category, String message) {
+        switch (category) {
+            case("InitChar"):
+                gameService.createOwnCharacter(game.connectionId, message);
+                break;
+            case("UpdateAllCharacterLocations"):
+                gameService.updateCharacterLocations(message);
+                break;
+            case("InitMap"):
+                gameService.initiateMap(message);
+                break;
+            case("UpdateAllMovingBlockLocations"):
+                gameService.updateAllMovingBlockLocations(message);
+                break;
+        }
     }
 
 

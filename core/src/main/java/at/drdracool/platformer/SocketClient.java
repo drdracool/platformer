@@ -57,14 +57,14 @@ public class SocketClient {
         }).start();
     }
 
-    public void setMessageHandler(Consumer<String> handler) {
-        this.messageHandler = handler;
-    }
-
     private void handleMessageOnMainThread(String message) {
         if (messageHandler != null) {
             messageHandler.accept(message);
         }
+    }
+
+    public void setMessageHandler(Consumer<String> handler) {
+        this.messageHandler = handler;
     }
 
     public void sendMessage(String message) throws IOException {

@@ -11,9 +11,11 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class MainMenuScreen implements Screen {
     final Platformer game;
@@ -23,36 +25,43 @@ public class MainMenuScreen implements Screen {
     BitmapFont font;
     Skin skin;
     TextureAtlas buttonAtlas;
+    ScreenViewport screenViewport;
+
 
     public MainMenuScreen(final Platformer game) {
         this.game = game;
-        stage = new Stage(game.viewport);
+        screenViewport = new ScreenViewport();
+        stage = new Stage(screenViewport);
         Gdx.input.setInputProcessor(stage);
         skin = new Skin(Gdx.files.internal("skin/lgdxs-ui.json"));
 
         int col_width = Gdx.graphics.getWidth() / 12;
         int row_height = Gdx.graphics.getWidth() / 12;
 
-        TextButton buildMapButton = new TextButton("Build New Map", skin, "oval3");
-        buildMapButton.getLabel().setAlignment(Align.right);
-        buildMapButton.setSize(col_width * 2, row_height);
-        buildMapButton.setPosition(col_width * 3, row_height * 3);
-        stage.addActor(buildMapButton);
+        Table table = new Table();
+        table.setFillParent(true);
+        stage.addActor(table);
 
-        TextButton playButton = new TextButton("Start New Game", skin, "oval4");
+        TextButton buildMapButton = new TextButton("BUILD", skin, "oval3");
+        buildMapButton.getLabel().setAlignment(Align.right);
+        table.add(buildMapButton).padLeft(col_width).width(col_width * 2).height(row_height);
+//        stage.addActor(buildMapButton);
+
+        TextButton playButton = new TextButton("PLAY", skin, "oval4");
         playButton.getLabel().setAlignment(Align.right);
-        playButton.getLabel().setAlignment(Align.right);
-        playButton.setSize(col_width * 2, row_height);
-        playButton.setPosition(col_width * 3, row_height * 4);
-        playButton.addListener(new InputListener(){
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                game.setGameScreen();
-                dispose();
-                return true;
-            }
-        });
-        stage.addActor(playButton);
+//        playButton.addListener(new InputListener(){
+//            @Override
+//            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+//                game.setGameScreen();
+//                dispose();
+//                return true;
+//            }
+//        });
+        table.row();
+        table.add(playButton).padBottom(row_height).padLeft(col_width).width(col_width * 2).height(row_height);
+        table.left().bottom();
+//        stage.addActor(playButton);
+        table.setDebug(true);
     }
 
     @Override
@@ -70,7 +79,7 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        game.viewport.update(width, height, true);
+        stage.getViewport().update(width, height);
     }
 
     @Override

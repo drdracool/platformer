@@ -8,12 +8,11 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class Platformer extends Game {
-    public FitViewport viewport;
+    public ExtendViewport viewport;
     public SpriteBatch batch;
-    public BitmapFont font;
     ShapeRenderer shape;
     OrthographicCamera camera;
 
@@ -21,14 +20,12 @@ public class Platformer extends Game {
     private GameScreen gameScreen;
 
     public void create() {
-        viewport = new FitViewport(8, 5);
-        batch = new SpriteBatch();
-        font = new BitmapFont();
-
-        font.setUseIntegerPositions(false);
-        font.getData().setScale(viewport.getWorldHeight() / Gdx.graphics.getHeight() * 2);
-        shape = new ShapeRenderer();
         camera = new OrthographicCamera();
+        viewport = new ExtendViewport(8, 5, camera);
+        batch = new SpriteBatch();
+
+        shape = new ShapeRenderer();
+
 
         initScreens();
 
@@ -59,6 +56,5 @@ public class Platformer extends Game {
     public void dispose() {
         mainMenuScreen.dispose();
         batch.dispose();
-        font.dispose();
     }
 }

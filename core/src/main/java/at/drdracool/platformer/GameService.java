@@ -26,7 +26,7 @@ public class GameService {
     public void drawBlocks(ShapeRenderer shape, OrthographicCamera camera) {
         for (var character : connectionCharacterMap.values()) {
             shape.begin(ShapeRenderer.ShapeType.Filled);
-            shape.setColor(new Color(0.42f, 0.52f, 1.19f, 1));
+            shape.setColor(new Color(0.42f, 0.52f, 1.19f, 0.6f));
             shape.rect(character.getLocationX(), character.getLocationY(), character.getWidth(), character.getHeight());
             shape.end();
         }

@@ -10,11 +10,13 @@ import java.util.List;
 import static com.badlogic.gdx.net.HttpRequestBuilder.json;
 
 public class GameService {
+    SocketSendClient socketSendClient;
     HashMap<String, GameCharacter> connectionCharacterMap;
     List<Block> blockList;
     List<Block> movingBlockList;
 
-    public GameService() {
+    public GameService(SocketSendClient socketSendClient) {
+        this.socketSendClient = socketSendClient;
         connectionCharacterMap = new HashMap<>();
         blockList = new ArrayList<>();
         movingBlockList = new ArrayList<>();

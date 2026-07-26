@@ -6,10 +6,10 @@ import com.badlogic.gdx.InputAdapter;
 import java.io.IOException;
 
 public class InputHandler extends InputAdapter {
-    SocketClient socketClient;
+    SocketSendClient socketSendClient;
 
-    public InputHandler(SocketClient socketClient) {
-        this.socketClient = socketClient;
+    public InputHandler(SocketSendClient socketSendClient) {
+        this.socketSendClient = socketSendClient;
     }
 
     @Override
@@ -59,7 +59,7 @@ public class InputHandler extends InputAdapter {
 
     public void notifyServerMovement(String command) {
         try {
-            socketClient.sendMessage(command);
+            socketSendClient.sendMessage(command);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -24,7 +24,7 @@ public class GameScreen implements Screen {
         Gdx.input.setInputProcessor(game.inputHandler);
 
         try {
-            game.startGame();
+            gameService.socketSendClient.sendMessage("START");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

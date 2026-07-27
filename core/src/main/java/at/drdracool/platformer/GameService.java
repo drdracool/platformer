@@ -23,7 +23,6 @@ public class GameService {
     }
 
     public void drawCharactersAndBlocks(ShapeRenderer shape) {
-        System.out.println("drawing moving blocks. size: " + movingBlockList.get(0).getWidth() + " " + movingBlockList.get(0).getHeight());
         for (var character : connectionCharacterMap.values()) {
             shape.begin(ShapeRenderer.ShapeType.Filled);
             shape.setColor(new Color(0.42f, 0.52f, 1.19f, 0.6f));

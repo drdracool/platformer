@@ -41,14 +41,15 @@ public class Platformer extends Game {
     }
 
     private void distributeServerMessage(String message) {
+        System.out.println("received message: " + message);
         String[] fullMessage = message.split("\\|");
         switch (fullMessage[0]) {
             case("OnConnectionOpen"):
-                Gdx.app.log("Nework-MainThread", "Received new connectionId from socket server: " + message);
+                Gdx.app.log("Network-MainThread", "Received new connectionId from socket server: " + message);
                 this.connectionId = fullMessage[1];
                 break;
             case("OnConnectionClose"):
-                Gdx.app.log("Nework-MainThread", "Received connection close request from socket server: " + message);
+                Gdx.app.log("Network-MainThread", "Received connection close request from socket server: " + message);
                 String connectionId = fullMessage[1];
                 gameScreen.gameService.removeDisconnectedConnection(connectionId);
                 break;

@@ -37,7 +37,6 @@ public class GameScreen implements Screen {
     }
 
     private void draw() {
-        System.out.println("rendering");
         ScreenUtils.clear(Color.BLACK);
         gameService.drawCharactersAndBlocks(game.shape);
     }

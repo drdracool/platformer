@@ -9,9 +9,8 @@ import java.io.InputStreamReader;
 import java.util.function.Consumer;
 
 public class SocketReceiveClient {
-    private BufferedReader bufferedReader;
     private Consumer<String> messageHandler;
-    private Socket socket;
+    private final Socket socket;
 
     public SocketReceiveClient(Socket socket) {
         this.socket = socket;
@@ -21,8 +20,8 @@ public class SocketReceiveClient {
         new Thread(() -> {
             try {
                 String line;
-                bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                while (bufferedReader != null && (line = bufferedReader.readLine()) != null) {
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                while ((line = bufferedReader.readLine()) != null) {
                     final String messageFromServer = line;
                     Gdx.app.postRunnable(() -> handleMessageOnMainThread(messageFromServer));
                 }

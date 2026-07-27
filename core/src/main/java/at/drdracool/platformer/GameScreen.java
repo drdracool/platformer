@@ -11,20 +11,23 @@ import java.io.IOException;
 public class GameScreen implements Screen {
     Platformer game;
     FPSLogger fpsLogger;
+    SocketSendClient socketSendClient;
     GameService gameService;
 
-    public GameScreen(Platformer game, GameService gameService) {
+    public GameScreen(Platformer game, SocketSendClient socketSendClient) {
         this.game = game;
-        this.gameService = gameService;
+        this.socketSendClient = socketSendClient;
     }
 
     @Override
     public void show() {
+        gameService = new GameService();
         fpsLogger = new FPSLogger();
-        Gdx.input.setInputProcessor(game.inputHandler);
+        InputHandler inputHandler = new InputHandler(socketSendClient);
+        Gdx.input.setInputProcessor(inputHandler);
 
         try {
-            gameService.socketSendClient.sendMessage("START");
+            socketSendClient.sendMessage("START");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

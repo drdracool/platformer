@@ -76,9 +76,8 @@ public class Platformer extends Game {
     }
 
     private void initScreens() {
-        gameService = new GameService(socketSendClient);
         mainMenuScreen = new MainMenuScreen(this);
-        gameScreen = new GameScreen(this, gameService);
+        gameScreen = new GameScreen(this, socketSendClient);
     }
 
     public void setGameScreen() {

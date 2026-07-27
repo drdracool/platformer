@@ -18,17 +18,17 @@ public class InputHandler extends InputAdapter {
         switch (keycode) {
             case Input.Keys.LEFT:
                 System.out.println("Pressed Left");
-                notifyServerMovement("MOVE|LEFT");
+                notifyServerMovement("LEFT");
                 keyProcessed = true;
                 break;
             case Input.Keys.RIGHT:
                 System.out.println("Pressed Right");
-                notifyServerMovement("MOVE|RIGHT");
+                notifyServerMovement("RIGHT");
                 keyProcessed = true;
                 break;
             case Input.Keys.UP:
                 System.out.println("Pressed Up");
-                notifyServerMovement("MOVE|JUMP");
+                notifyServerMovement("JUMP");
                 keyProcessed = true;
                 break;
         }
@@ -40,17 +40,17 @@ public class InputHandler extends InputAdapter {
         switch (keycode) {
             case Input.Keys.LEFT:
                 System.out.println("Finished pressing left");
-                notifyServerMovement("MOVE|STOP_LEFT");
+                notifyServerMovement("STOP_LEFT");
                 keyProcessed = true;
                 break;
             case Input.Keys.RIGHT:
                 System.out.println("Finished pressing right");
-                notifyServerMovement("MOVE|STOP_RIGHT");
+                notifyServerMovement("STOP_RIGHT");
                 keyProcessed = true;
                 break;
             case Input.Keys.UP:
                 System.out.println("Finished pressing up");
-                notifyServerMovement("MOVE|STOP_JUMPING");
+                notifyServerMovement("STOP_JUMPING");
                 keyProcessed = true;
                 break;
         }
@@ -59,7 +59,7 @@ public class InputHandler extends InputAdapter {
 
     public void notifyServerMovement(String command) {
         try {
-            socketSendClient.sendMessage(command);
+            socketSendClient.sendMessage("MOVE|" + command);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

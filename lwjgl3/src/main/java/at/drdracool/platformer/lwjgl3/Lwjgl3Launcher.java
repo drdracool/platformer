@@ -3,7 +3,6 @@ package at.drdracool.platformer.lwjgl3;
 import at.drdracool.platformer.Platformer;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import at.drdracool.platformer.GameScreen;
 
 /** Launches the desktop (LWJGL3) application. */
 public class Lwjgl3Launcher {

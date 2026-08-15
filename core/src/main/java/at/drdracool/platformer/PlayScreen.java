@@ -8,13 +8,13 @@ import com.badlogic.gdx.graphics.Color;
 
 import java.io.IOException;
 
-public class GameScreen implements Screen {
+public class PlayScreen implements Screen {
     Platformer game;
     FPSLogger fpsLogger;
     SocketSendClient socketSendClient;
     GameService gameService;
 
-    public GameScreen(Platformer game, SocketSendClient socketSendClient) {
+    public PlayScreen(Platformer game, SocketSendClient socketSendClient) {
         this.game = game;
         this.socketSendClient = socketSendClient;
     }
@@ -66,7 +66,6 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
-
     }
 
     public void handlePlayMessage(String category, String message) {

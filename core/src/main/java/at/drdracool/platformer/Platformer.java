@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.net.Socket;
 import com.badlogic.gdx.net.SocketHints;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import java.io.IOException;
 
 public class Platformer extends Game {
     public ExtendViewport viewport;
@@ -23,10 +22,10 @@ public class Platformer extends Game {
     InputHandler inputHandler;
     String connectionId;
 
-    private MainMenuScreen mainMenuScreen;
-    private GameScreen gameScreen;
+    private MainScreen mainScreen;
+    private SelectScreen selectScreen;
+    private PlayScreen playScreen;
 
-    GameService gameService;
 
     public void create() {
         camera = new OrthographicCamera();
@@ -37,7 +36,7 @@ public class Platformer extends Game {
         initConnection();
         initScreens();
 
-        this.setScreen(mainMenuScreen);
+        this.setScreen(mainScreen);
     }
 
     private void distributeServerMessage(String message) {
@@ -51,10 +50,12 @@ public class Platformer extends Game {
             case("OnConnectionClose"):
                 Gdx.app.log("Network-MainThread", "Received connection close request from socket server: " + message);
                 String connectionId = fullMessage[1];
-                gameScreen.gameService.removeDisconnectedConnection(connectionId);
+                playScreen.gameService.removeDisconnectedConnection(connectionId);
                 break;
+            case("SELECT"):
+                selectScreen.renderAllMaps(fullMessage[1]);
             case("PLAY"):
-                gameScreen.handlePlayMessage(fullMessage[1], fullMessage[2]);
+                playScreen.handlePlayMessage(fullMessage[1], fullMessage[2]);
         }
     }
 
@@ -76,12 +77,17 @@ public class Platformer extends Game {
     }
 
     private void initScreens() {
-        mainMenuScreen = new MainMenuScreen(this);
-        gameScreen = new GameScreen(this, socketSendClient);
+        mainScreen = new MainScreen(this);
+        selectScreen = new SelectScreen(this, socketSendClient);
+        playScreen = new PlayScreen(this, socketSendClient);
     }
 
-    public void setGameScreen() {
-        setScreen(gameScreen);
+    public void setSelectScreen() {
+        setScreen(selectScreen);
+    }
+
+    public void setPlayScreen() {
+        setScreen(playScreen);
     }
 
     @Override
@@ -96,7 +102,9 @@ public class Platformer extends Game {
     }
 
     public void dispose() {
-        mainMenuScreen.dispose();
+        mainScreen.dispose();
+        selectScreen.dispose();
+        playScreen.dispose();
         batch.dispose();
     }
 }

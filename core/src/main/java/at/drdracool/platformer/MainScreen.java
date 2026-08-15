@@ -13,7 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-public class MainMenuScreen implements Screen {
+public class MainScreen implements Screen {
     final Platformer game;
     private final Stage stage;
     TextButton textButton;
@@ -25,7 +25,7 @@ public class MainMenuScreen implements Screen {
     Table table;
 
 
-    public MainMenuScreen(final Platformer game) {
+    public MainScreen(final Platformer game) {
         this.game = game;
         screenViewport = new ScreenViewport();
 
@@ -49,7 +49,8 @@ public class MainMenuScreen implements Screen {
         playButton.addListener(new InputListener(){
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                game.setGameScreen();
+                System.out.println("set select screen");
+                game.setSelectScreen();
                 dispose();
                 return true;
             }

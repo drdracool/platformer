@@ -49,7 +49,6 @@ public class MainScreen implements Screen {
         playButton.addListener(new InputListener(){
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                System.out.println("set select screen");
                 game.setSelectScreen();
                 dispose();
                 return true;

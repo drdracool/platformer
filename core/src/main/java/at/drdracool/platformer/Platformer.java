@@ -48,6 +48,7 @@ public class Platformer extends Game {
                 this.connectionId = fullMessage[1];
                 break;
             case("OnConnectionClose"):
+                //TODO: move this to playScreen
                 Gdx.app.log("Network-MainThread", "Received connection close request from socket server: " + message);
                 String connectionId = fullMessage[1];
                 playScreen.gameService.removeDisconnectedConnection(connectionId);

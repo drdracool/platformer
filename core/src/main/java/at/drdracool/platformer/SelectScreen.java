@@ -2,6 +2,8 @@ package at.drdracool.platformer;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -53,10 +55,23 @@ public class SelectScreen implements Screen {
 
         mapNames = message.split(",");
         for (var mapName : mapNames) {
-            TextButton mapButton = new TextButton(mapName, skin, "oval3");
+            TextButton mapButton = new TextButton(mapName, skin, "oval5");
             mapButton.getLabel().setAlignment(Align.center);
+            mapButton.addListener(new InputListener(){
+                @Override
+                public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                    try {
+                        socketSendClient.sendMessage("PLAY|START|" + mapName);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    game.setPlayScreen();
+                    dispose();
+                    return true;
+                }
+            });
+            table.add(mapButton).width(col_width * 8).height(row_height * 1.5f);
 
-            table.add(mapButton).padLeft(col_width).width(col_width * 8).height(row_height * 1.5f);
         }
     }
 

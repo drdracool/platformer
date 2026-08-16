@@ -53,9 +53,11 @@ public class Platformer extends Game {
                 playScreen.gameService.removeDisconnectedConnection(connectionId);
                 break;
             case("SELECT"):
-                selectScreen.renderAllMaps(fullMessage[1]);
+                selectScreen.receiveMapNames(fullMessage[1]);
+                break;
             case("PLAY"):
                 playScreen.handlePlayMessage(fullMessage[1], fullMessage[2]);
+                break;
         }
     }
 
@@ -103,8 +105,8 @@ public class Platformer extends Game {
 
     public void dispose() {
         mainScreen.dispose();
-        selectScreen.dispose();
-        playScreen.dispose();
+        //selectScreen.dispose();
+        //playScreen.dispose();
         batch.dispose();
     }
 }

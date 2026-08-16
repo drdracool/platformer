@@ -19,18 +19,33 @@ public class PlayScreen implements Screen {
         this.socketSendClient = socketSendClient;
     }
 
+    public void handlePlayMessage(String category, String message) {
+        switch (category) {
+            case("InitChar"):
+                gameService.createOwnCharacter(game.connectionId, message);
+                break;
+            case("UpdateAllCharacterLocations"):
+                gameService.updateCharacterLocations(message);
+                break;
+            case("InitMap"):
+                gameService.initiateMap(message);
+                break;
+            case("UpdateAllMovingBlockLocations"):
+                gameService.updateAllMovingBlockLocations(message);
+                break;
+            case("RemoveCharacter"):
+                Gdx.app.log("Network-MainThread", "Received connection close request from socket server: " + message);
+                gameService.removeDisconnectedConnection(message);
+                break;
+        }
+    }
+
     @Override
     public void show() {
         gameService = new GameService();
         fpsLogger = new FPSLogger();
         InputHandler inputHandler = new InputHandler(socketSendClient);
         Gdx.input.setInputProcessor(inputHandler);
-
-        try {
-            socketSendClient.sendMessage("START");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     @Override
@@ -67,23 +82,4 @@ public class PlayScreen implements Screen {
     @Override
     public void dispose() {
     }
-
-    public void handlePlayMessage(String category, String message) {
-        switch (category) {
-            case("InitChar"):
-                gameService.createOwnCharacter(game.connectionId, message);
-                break;
-            case("UpdateAllCharacterLocations"):
-                gameService.updateCharacterLocations(message);
-                break;
-            case("InitMap"):
-                gameService.initiateMap(message);
-                break;
-            case("UpdateAllMovingBlockLocations"):
-                gameService.updateAllMovingBlockLocations(message);
-                break;
-        }
-    }
-
-
 }

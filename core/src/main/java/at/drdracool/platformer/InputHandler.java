@@ -59,7 +59,7 @@ public class InputHandler extends InputAdapter {
 
     public void notifyServerMovement(String command) {
         try {
-            socketSendClient.sendMessage("MOVE|" + command);
+            socketSendClient.sendMessage("PLAY|MOVE|" + command);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

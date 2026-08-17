@@ -87,6 +87,8 @@ public class Platformer extends Game {
         setScreen(playScreen);
     }
 
+    public void setMainScreen() {setScreen(mainScreen);}
+
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height, true);

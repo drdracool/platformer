@@ -42,8 +42,6 @@ public class SelectScreen implements Screen {
 
         skin = new Skin(Gdx.files.internal("skin/lgdxs-ui.json"));
 
-
-
         table = new Table();
         table.setFillParent(true);
         stage.addActor(table);
@@ -70,9 +68,23 @@ public class SelectScreen implements Screen {
                     return true;
                 }
             });
-            table.add(mapButton).width(col_width * 8).height(row_height * 1.5f);
-
+            table.row();
+            table.add(mapButton).width(col_width * 6).height(row_height * 1.5f);
         }
+
+        TextButton mapButton = new TextButton("Go Back", skin, "oval3");
+        mapButton.getLabel().setAlignment(Align.center);
+        mapButton.addListener(new InputListener(){
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                game.setMainScreen();
+                dispose();
+                return true;
+            }
+        });
+
+        table.row();
+        table.add(mapButton).width(col_width * 6).height(row_height * 1.5f);
     }
 
     @Override

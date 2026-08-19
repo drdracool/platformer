@@ -18,24 +18,6 @@ public class BuildService {
         character = json.fromJson(GameCharacter.class, message);
     }
 
-    public void updateMovementIntention(String command) {
-        switch (command) {
-            case ("LEFT"):
-            case ("STOP_RIGHT"):
-                break;
-            case ("RIGHT"):
-            case ("STOP_LEFT"):
-                break;
-            case ("UP"):
-            case ("STOP_DOWN"):
-                break;
-            case ("DOWN"):
-            case ("STOP_UP"):
-                break;
-        }
-    }
-
-
     public void drawCharacter(ShapeRenderer shape) {
         //updateLocation();
         shape.begin(ShapeRenderer.ShapeType.Filled);

@@ -1,10 +1,7 @@
 package at.drdracool.platformer.screens;
 
-import at.drdracool.platformer.inputHandlers.BuildInputHandler;
 import at.drdracool.platformer.inputHandlers.MoveInputHandler;
-import at.drdracool.platformer.models.GameCharacter;
 import at.drdracool.platformer.models.MovingBlockDraft;
-import at.drdracool.platformer.models.Pair;
 import at.drdracool.platformer.models.StaticBlockDraft;
 import at.drdracool.platformer.services.BuildService;
 import at.drdracool.platformer.socketClients.SocketSendClient;
@@ -23,8 +20,6 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.badlogic.gdx.net.HttpRequestBuilder.json;
 
 public class BuildScreen implements Screen {
     Platformer game;

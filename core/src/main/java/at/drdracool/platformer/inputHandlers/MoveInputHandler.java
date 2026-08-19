@@ -72,7 +72,12 @@ public class MoveInputHandler extends InputAdapter {
 
     public void notifyServerMovement(String command) {
         try {
-            socketSendClient.sendMessage("PLAY|MOVE|" + command + "|" + hasGravity);
+            if (hasGravity) {
+                socketSendClient.sendMessage("PLAY|MOVE|" + command);
+            } else {
+                socketSendClient.sendMessage("BUILD|MOVE|" + command);
+            }
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

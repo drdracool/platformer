@@ -1,10 +1,12 @@
 package at.drdracool.platformer.screens;
 
-import at.drdracool.platformer.BuildInputHandler;
-import at.drdracool.platformer.PlayInputHandler;
-import at.drdracool.platformer.models.MapDraft;
+import at.drdracool.platformer.inputHandlers.BuildInputHandler;
+import at.drdracool.platformer.inputHandlers.MoveInputHandler;
+import at.drdracool.platformer.models.GameCharacter;
 import at.drdracool.platformer.models.MovingBlockDraft;
+import at.drdracool.platformer.models.Pair;
 import at.drdracool.platformer.models.StaticBlockDraft;
+import at.drdracool.platformer.services.BuildService;
 import at.drdracool.platformer.socketClients.SocketSendClient;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
@@ -22,14 +24,19 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.badlogic.gdx.net.HttpRequestBuilder.json;
+
 public class BuildScreen implements Screen {
     Platformer game;
+    BuildService buildService;
     SocketSendClient socketSendClient;
     Stage stage;
     ScreenViewport screenViewport;
     Skin skin;
     Skin uiskin;
     Table table;
+
+
 
     String name;
     List<StaticBlockDraft> staticBlocks = new ArrayList<>();
@@ -38,6 +45,15 @@ public class BuildScreen implements Screen {
     public BuildScreen(Platformer game, SocketSendClient socketSendClient) {
         this.game = game;
         this.socketSendClient = socketSendClient;
+        this.buildService = new BuildService();
+    }
+
+    public void handleMessage(String category, String message) {
+        switch (category) {
+            case ("InitChar"):
+                buildService.createNewCharacter(message);
+                break;
+        }
     }
 
     @Override
@@ -46,6 +62,12 @@ public class BuildScreen implements Screen {
         uiskin = new Skin(Gdx.files.internal("ui/uiskin.json"));
         setUpInputProcessor();
         setUpHeaderTable();
+
+        try {
+            socketSendClient.sendMessage("BUILD|START");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void setUpInputProcessor() {
@@ -54,8 +76,8 @@ public class BuildScreen implements Screen {
         InputMultiplexer multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(stage);
 
-        BuildInputHandler buildInputHandler = new BuildInputHandler();
-        multiplexer.addProcessor(buildInputHandler);
+        MoveInputHandler moveInputHandler = new MoveInputHandler(socketSendClient, false);
+        multiplexer.addProcessor(moveInputHandler);
 
         Gdx.input.setInputProcessor(multiplexer);
     }
@@ -81,11 +103,12 @@ public class BuildScreen implements Screen {
         saveButton.addListener(new InputListener(){
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                try {
-                    socketSendClient.sendMessage("BUILD|" + game.connectionId);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+                name = nameText.getText();
+//                try {
+//                    socketSendClient.sendMessage("BUILD|" + game.connectionId);
+//                } catch (IOException e) {
+//                    throw new RuntimeException(e);
+//                }
                 game.setSelectScreen();
                 dispose();
                 return true;
@@ -104,6 +127,8 @@ public class BuildScreen implements Screen {
 
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
+
+        buildService.drawCharacter(game.shape);
     }
 
     @Override

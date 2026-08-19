@@ -21,4 +21,12 @@ public class Pair {
         }
         return true;
     }
+
+    public void updateX(float delta) {
+        x += delta;
+    }
+
+    public void updateY(float delta) {
+        y += delta;
+    }
 }

@@ -1,6 +1,6 @@
 package at.drdracool.platformer.screens;
 
-import at.drdracool.platformer.*;
+import at.drdracool.platformer.inputHandlers.MoveInputHandler;
 import at.drdracool.platformer.socketClients.SocketReceiveClient;
 import at.drdracool.platformer.socketClients.SocketSendClient;
 import com.badlogic.gdx.Game;
@@ -22,7 +22,7 @@ public class Platformer extends Game {
     Socket socket;
     SocketReceiveClient socketReceiveClient;
     SocketSendClient socketSendClient;
-    PlayInputHandler playInputHandler;
+    MoveInputHandler moveInputHandler;
     String connectionId;
 
     private BuildScreen buildScreen;
@@ -55,8 +55,10 @@ public class Platformer extends Game {
                 selectScreen.receiveMapNames(fullMessage[1]);
                 break;
             case("PLAY"):
-                playScreen.handlePlayMessage(fullMessage[1], fullMessage[2]);
+                playScreen.handleMessage(fullMessage[1], fullMessage[2]);
                 break;
+            case("BUILD"):
+                buildScreen.handleMessage(fullMessage[1], fullMessage[2]);
         }
     }
 
@@ -72,9 +74,6 @@ public class Platformer extends Game {
         socketReceiveClient.startListeningThread();
 
         Gdx.app.log("Network", "Connected to socket server successfully");
-
-        playInputHandler = new PlayInputHandler(socketSendClient);
-        Gdx.input.setInputProcessor(playInputHandler);
     }
 
     private void initScreens() {

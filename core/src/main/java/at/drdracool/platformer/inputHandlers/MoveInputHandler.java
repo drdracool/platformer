@@ -1,4 +1,4 @@
-package at.drdracool.platformer;
+package at.drdracool.platformer.inputHandlers;
 
 import at.drdracool.platformer.socketClients.SocketSendClient;
 import com.badlogic.gdx.Input;
@@ -6,11 +6,13 @@ import com.badlogic.gdx.InputAdapter;
 
 import java.io.IOException;
 
-public class PlayInputHandler extends InputAdapter {
+public class MoveInputHandler extends InputAdapter {
     SocketSendClient socketSendClient;
+    boolean hasGravity;
 
-    public PlayInputHandler(SocketSendClient socketSendClient) {
+    public MoveInputHandler(SocketSendClient socketSendClient, boolean hasGravity) {
         this.socketSendClient = socketSendClient;
+        this.hasGravity = hasGravity;
     }
 
     @Override
@@ -29,7 +31,12 @@ public class PlayInputHandler extends InputAdapter {
                 break;
             case Input.Keys.UP:
                 System.out.println("Pressed Up");
-                notifyServerMovement("JUMP");
+                notifyServerMovement("UP");
+                keyProcessed = true;
+                break;
+            case Input.Keys.DOWN:
+                System.out.println("Pressed Down");
+                notifyServerMovement("DOWN");
                 keyProcessed = true;
                 break;
         }
@@ -51,7 +58,12 @@ public class PlayInputHandler extends InputAdapter {
                 break;
             case Input.Keys.UP:
                 System.out.println("Finished pressing up");
-                notifyServerMovement("STOP_JUMPING");
+                notifyServerMovement("STOP_UP");
+                keyProcessed = true;
+                break;
+            case Input.Keys.DOWN:
+                System.out.println("Finished pressing up");
+                notifyServerMovement("STOP_DOWN");
                 keyProcessed = true;
                 break;
         }
@@ -60,7 +72,7 @@ public class PlayInputHandler extends InputAdapter {
 
     public void notifyServerMovement(String command) {
         try {
-            socketSendClient.sendMessage("PLAY|MOVE|" + command);
+            socketSendClient.sendMessage("PLAY|MOVE|" + command + "|" + hasGravity);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -1,4 +1,4 @@
-package at.drdracool.platformer;
+package at.drdracool.platformer.services;
 
 import at.drdracool.platformer.models.Block;
 import at.drdracool.platformer.models.GameCharacter;

@@ -1,7 +1,7 @@
 package at.drdracool.platformer.screens;
 
-import at.drdracool.platformer.GameService;
-import at.drdracool.platformer.PlayInputHandler;
+import at.drdracool.platformer.services.GameService;
+import at.drdracool.platformer.inputHandlers.MoveInputHandler;
 import at.drdracool.platformer.socketClients.SocketSendClient;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
@@ -35,7 +35,7 @@ public class PlayScreen implements Screen {
         this.socketSendClient = socketSendClient;
     }
 
-    public void handlePlayMessage(String category, String message) {
+    public void handleMessage(String category, String message) {
         switch (category) {
             case("InitChar"):
                 gameService.createOwnCharacter(game.connectionId, message);
@@ -72,8 +72,8 @@ public class PlayScreen implements Screen {
         InputMultiplexer multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(stage);
 
-        PlayInputHandler playInputHandler = new PlayInputHandler(socketSendClient);
-        multiplexer.addProcessor(playInputHandler);
+        MoveInputHandler moveInputHandler = new MoveInputHandler(socketSendClient, true);
+        multiplexer.addProcessor(moveInputHandler);
 
         Gdx.input.setInputProcessor(multiplexer);
     }

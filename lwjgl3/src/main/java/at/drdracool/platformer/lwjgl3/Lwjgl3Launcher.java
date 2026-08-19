@@ -1,6 +1,6 @@
 package at.drdracool.platformer.lwjgl3;
 
-import at.drdracool.platformer.Platformer;
+import at.drdracool.platformer.screens.Platformer;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 

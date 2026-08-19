@@ -1,6 +1,4 @@
-package at.drdracool.platformer;
-
-import java.awt.*;
+package at.drdracool.platformer.models;
 
 public class Block {
 

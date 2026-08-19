@@ -240,7 +240,7 @@ com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
         messageFontColor: message
     }
     spinner: {
-        font: font
+        font: window
         fontColor: white
         disabledFontColor: disabled
         background: spinner-textfield

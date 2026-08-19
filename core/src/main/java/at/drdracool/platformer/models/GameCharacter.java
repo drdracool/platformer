@@ -1,4 +1,4 @@
-package at.drdracool.platformer;
+package at.drdracool.platformer.models;
 
 public class GameCharacter {
     String connectionId;

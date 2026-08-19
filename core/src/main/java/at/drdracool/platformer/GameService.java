@@ -1,5 +1,7 @@
 package at.drdracool.platformer;
 
+import at.drdracool.platformer.models.Block;
+import at.drdracool.platformer.models.GameCharacter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 

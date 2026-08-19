@@ -3,7 +3,7 @@ package at.drdracool.platformer.gwt;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.gwt.GwtApplication;
 import com.badlogic.gdx.backends.gwt.GwtApplicationConfiguration;
-import at.drdracool.platformer.PlayScreen;
+import at.drdracool.platformer.screens.PlayScreen;
 
 /** Launches the GWT application. */
 public class GwtLauncher extends GwtApplication {

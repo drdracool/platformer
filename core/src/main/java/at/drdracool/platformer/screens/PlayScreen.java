@@ -1,5 +1,8 @@
-package at.drdracool.platformer;
+package at.drdracool.platformer.screens;
 
+import at.drdracool.platformer.GameService;
+import at.drdracool.platformer.PlayInputHandler;
+import at.drdracool.platformer.socketClients.SocketSendClient;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
@@ -69,8 +72,8 @@ public class PlayScreen implements Screen {
         InputMultiplexer multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(stage);
 
-        InputHandler inputHandler = new InputHandler(socketSendClient);
-        multiplexer.addProcessor(inputHandler);
+        PlayInputHandler playInputHandler = new PlayInputHandler(socketSendClient);
+        multiplexer.addProcessor(playInputHandler);
 
         Gdx.input.setInputProcessor(multiplexer);
     }

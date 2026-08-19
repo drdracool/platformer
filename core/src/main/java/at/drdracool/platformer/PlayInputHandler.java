@@ -1,14 +1,15 @@
 package at.drdracool.platformer;
 
+import at.drdracool.platformer.socketClients.SocketSendClient;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 
 import java.io.IOException;
 
-public class InputHandler extends InputAdapter {
+public class PlayInputHandler extends InputAdapter {
     SocketSendClient socketSendClient;
 
-    public InputHandler(SocketSendClient socketSendClient) {
+    public PlayInputHandler(SocketSendClient socketSendClient) {
         this.socketSendClient = socketSendClient;
     }
 

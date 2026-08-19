@@ -1,4 +1,4 @@
-package at.drdracool.platformer;
+package at.drdracool.platformer.socketClients;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.net.Socket;

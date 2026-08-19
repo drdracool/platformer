@@ -1,4 +1,4 @@
-package at.drdracool.platformer;
+package at.drdracool.platformer.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -42,6 +42,14 @@ public class MainScreen implements Screen {
 
         TextButton buildMapButton = new TextButton("BUILD", skin, "oval3");
         buildMapButton.getLabel().setAlignment(Align.right);
+        buildMapButton.addListener(new InputListener(){
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                game.setBuildScreen();
+                dispose();
+                return true;
+            }
+        });
         table.add(buildMapButton).padLeft(col_width).width(col_width * 2).height(row_height);
 
         TextButton playButton = new TextButton("PLAY", skin, "oval4");

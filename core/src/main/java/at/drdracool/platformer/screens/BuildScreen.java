@@ -1,8 +1,6 @@
 package at.drdracool.platformer.screens;
 
 import at.drdracool.platformer.inputHandlers.MoveInputHandler;
-import at.drdracool.platformer.models.MovingBlockDraft;
-import at.drdracool.platformer.models.StaticBlockDraft;
 import at.drdracool.platformer.services.BuildService;
 import at.drdracool.platformer.socketClients.SocketSendClient;
 import com.badlogic.gdx.Gdx;
@@ -18,8 +16,6 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class BuildScreen implements Screen {
     Platformer game;
@@ -33,10 +29,6 @@ public class BuildScreen implements Screen {
 
 
 
-    String name;
-    List<StaticBlockDraft> staticBlocks = new ArrayList<>();
-    List<MovingBlockDraft> movingBlocks = new ArrayList<>();
-
     public BuildScreen(Platformer game, SocketSendClient socketSendClient) {
         this.game = game;
         this.socketSendClient = socketSendClient;
@@ -47,6 +39,12 @@ public class BuildScreen implements Screen {
         switch (category) {
             case ("InitChar"):
                 buildService.createNewCharacter(message);
+                break;
+            case("UpdateAllCharacterLocations"):
+                buildService.updateCharacterLocations(message);
+                break;
+            case("UpdateAllBlockLocations"):
+                buildService.updateAllBlockLocations(message);
                 break;
         }
     }
@@ -98,7 +96,6 @@ public class BuildScreen implements Screen {
         saveButton.addListener(new InputListener(){
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                name = nameText.getText();
 //                try {
 //                    socketSendClient.sendMessage("BUILD|" + game.connectionId);
 //                } catch (IOException e) {
@@ -123,7 +120,7 @@ public class BuildScreen implements Screen {
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
 
-        buildService.drawCharacter(game.shape);
+        buildService.drawCharactersAndBlocks(game.shape);
     }
 
     @Override

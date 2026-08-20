@@ -50,7 +50,6 @@ public class GameService {
             var connectionId = character.getConnectionId();
             var alreadyExistCharacter = connectionCharacterMap.get(connectionId);
             if (alreadyExistCharacter != null) {
-//                System.out.println("passed in location: " + character.getLocationX());
                 alreadyExistCharacter.setLocationX(character.getLocationX());
                 alreadyExistCharacter.setLocationY(character.getLocationY());
             } else {

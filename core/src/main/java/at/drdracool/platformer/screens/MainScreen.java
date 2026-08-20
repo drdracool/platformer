@@ -2,6 +2,7 @@ package at.drdracool.platformer.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -11,11 +12,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class MainScreen implements Screen {
     final Platformer game;
-    private final Stage stage;
+    Stage stage;
     TextButton textButton;
     TextButton.TextButtonStyle textButtonStyle;
     BitmapFont font;
@@ -24,9 +26,12 @@ public class MainScreen implements Screen {
     ScreenViewport screenViewport;
     Table table;
 
-
     public MainScreen(final Platformer game) {
         this.game = game;
+    }
+
+    @Override
+    public void show() {
         screenViewport = new ScreenViewport();
 
         stage = new Stage(screenViewport);
@@ -70,13 +75,10 @@ public class MainScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        ScreenUtils.clear(Color.BLACK);
+
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
-    }
-
-    @Override
-    public void show() {
-
     }
 
     @Override

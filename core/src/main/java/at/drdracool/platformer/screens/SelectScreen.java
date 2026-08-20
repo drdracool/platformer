@@ -1,5 +1,6 @@
 package at.drdracool.platformer.screens;
 
+import at.drdracool.platformer.interfaces.BasicScreen;
 import at.drdracool.platformer.socketClients.SocketSendClient;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -14,25 +15,23 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.io.IOException;
 
-public class SelectScreen implements Screen {
+public class SelectScreen implements BasicScreen {
     Platformer game;
     Stage stage;
     Skin skin;
     ScreenViewport screenViewport;
     Table table;
-    SocketSendClient socketSendClient;
 
     String[] mapNames;
 
-    public SelectScreen(Platformer game, SocketSendClient socketSendClient) {
+    public SelectScreen(Platformer game) {
         this.game = game;
-        this.socketSendClient = socketSendClient;
     }
 
     @Override
     public void show() {
         try {
-            socketSendClient.sendMessage("SELECT");
+            game.socketSendClient.sendMessage("SELECT");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -48,7 +47,7 @@ public class SelectScreen implements Screen {
         stage.addActor(table);
     }
 
-    public void receiveMapNames(String message) {
+    public void handleMessage(String category, String message) {
         int col_width = Gdx.graphics.getWidth() / 12;
         int row_height = Gdx.graphics.getHeight() / 12;
 
@@ -60,12 +59,11 @@ public class SelectScreen implements Screen {
                 @Override
                 public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                     try {
-                        socketSendClient.sendMessage("PLAY|START|" + mapName);
+                        game.socketSendClient.sendMessage("PLAY|START|" + mapName);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
-                    game.setPlayScreen();
-                    dispose();
+                    game.setNewScreen(new PlayScreen(game));
                     return true;
                 }
             });
@@ -78,8 +76,7 @@ public class SelectScreen implements Screen {
         mapButton.addListener(new InputListener(){
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                game.setMainScreen();
-                dispose();
+                game.setNewScreen(new MainScreen(game));
                 return true;
             }
         });

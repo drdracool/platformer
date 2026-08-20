@@ -1,5 +1,8 @@
 package at.drdracool.platformer.screens;
 
+import at.drdracool.platformer.interfaces.BasicScreen;
+import at.drdracool.platformer.services.BuildService;
+import at.drdracool.platformer.socketClients.SocketSendClient;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -15,7 +18,10 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-public class MainScreen implements Screen {
+import java.io.IOException;
+import java.net.Socket;
+
+public class MainScreen implements BasicScreen {
     final Platformer game;
     Stage stage;
     TextButton textButton;
@@ -29,6 +35,8 @@ public class MainScreen implements Screen {
     public MainScreen(final Platformer game) {
         this.game = game;
     }
+
+    public void handleMessage(String category, String message){}
 
     @Override
     public void show() {
@@ -50,8 +58,7 @@ public class MainScreen implements Screen {
         buildMapButton.addListener(new InputListener(){
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                game.setBuildScreen();
-                dispose();
+                game.setNewScreen(new BuildScreen(game));
                 return true;
             }
         });
@@ -62,8 +69,7 @@ public class MainScreen implements Screen {
         playButton.addListener(new InputListener(){
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                game.setSelectScreen();
-                dispose();
+                game.setNewScreen(new SelectScreen(game));
                 return true;
             }
         });

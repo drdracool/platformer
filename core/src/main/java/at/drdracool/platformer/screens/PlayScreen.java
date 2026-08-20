@@ -1,5 +1,6 @@
 package at.drdracool.platformer.screens;
 
+import at.drdracool.platformer.interfaces.BasicScreen;
 import at.drdracool.platformer.services.GameService;
 import at.drdracool.platformer.inputHandlers.MoveInputHandler;
 import at.drdracool.platformer.socketClients.SocketSendClient;
@@ -20,19 +21,17 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.io.IOException;
 
-public class PlayScreen implements Screen {
+public class PlayScreen implements BasicScreen {
     Platformer game;
     FPSLogger fpsLogger;
-    SocketSendClient socketSendClient;
     GameService gameService;
     Stage stage;
     ScreenViewport screenViewport;
     Skin skin;
     Table table;
 
-    public PlayScreen(Platformer game, SocketSendClient socketSendClient) {
+    public PlayScreen(Platformer game) {
         this.game = game;
-        this.socketSendClient = socketSendClient;
     }
 
     public void handleMessage(String category, String message) {
@@ -72,7 +71,7 @@ public class PlayScreen implements Screen {
         InputMultiplexer multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(stage);
 
-        MoveInputHandler moveInputHandler = new MoveInputHandler(socketSendClient, true);
+        MoveInputHandler moveInputHandler = new MoveInputHandler(game.socketSendClient, true);
         multiplexer.addProcessor(moveInputHandler);
 
         Gdx.input.setInputProcessor(multiplexer);
@@ -92,12 +91,11 @@ public class PlayScreen implements Screen {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 try {
-                    socketSendClient.sendMessage("PLAY|QUIT|" + game.connectionId);
+                    game.socketSendClient.sendMessage("PLAY|QUIT|" + game.connectionId);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-                game.setSelectScreen();
-                dispose();
+                game.setNewScreen(new SelectScreen(game));
                 return true;
             }
         });

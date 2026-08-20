@@ -1,6 +1,7 @@
 package at.drdracool.platformer.screens;
 
 import at.drdracool.platformer.inputHandlers.MoveInputHandler;
+import at.drdracool.platformer.interfaces.BasicScreen;
 import at.drdracool.platformer.socketClients.SocketReceiveClient;
 import at.drdracool.platformer.socketClients.SocketSendClient;
 import com.badlogic.gdx.Game;
@@ -22,14 +23,9 @@ public class Platformer extends Game {
     Socket socket;
     SocketReceiveClient socketReceiveClient;
     SocketSendClient socketSendClient;
-    MoveInputHandler moveInputHandler;
     String connectionId;
 
-    private BuildScreen buildScreen;
-    private MainScreen mainScreen;
-    private SelectScreen selectScreen;
-    private PlayScreen playScreen;
-
+    private BasicScreen currentScreen;
 
     public void create() {
         camera = new OrthographicCamera();
@@ -38,9 +34,7 @@ public class Platformer extends Game {
         shape = new ShapeRenderer();
 
         initConnection();
-        initScreens();
-
-        this.setScreen(mainScreen);
+        setNewScreen(new MainScreen(this));
     }
 
     private void distributeServerMessage(String message) {
@@ -51,14 +45,8 @@ public class Platformer extends Game {
                 Gdx.app.log("Network-MainThread", "Received new connectionId from socket server: " + message);
                 this.connectionId = fullMessage[1];
                 break;
-            case("SELECT"):
-                selectScreen.receiveMapNames(fullMessage[1]);
-                break;
-            case("PLAY"):
-                playScreen.handleMessage(fullMessage[1], fullMessage[2]);
-                break;
-            case("BUILD"):
-                buildScreen.handleMessage(fullMessage[1], fullMessage[2]);
+            case("SCREEN"):
+                currentScreen.handleMessage(fullMessage[1], fullMessage[2]);
         }
     }
 
@@ -76,24 +64,11 @@ public class Platformer extends Game {
         Gdx.app.log("Network", "Connected to socket server successfully");
     }
 
-    private void initScreens() {
-        mainScreen = new MainScreen(this);
-        buildScreen = new BuildScreen(this, socketSendClient);
-        selectScreen = new SelectScreen(this, socketSendClient);
-        playScreen = new PlayScreen(this, socketSendClient);
+    public void setNewScreen(BasicScreen screen) {
+        if (currentScreen != null) currentScreen.dispose();
+        setScreen(screen);
+        currentScreen = screen;
     }
-
-    public void setBuildScreen() {setScreen(buildScreen);}
-
-    public void setSelectScreen() {
-        setScreen(selectScreen);
-    }
-
-    public void setPlayScreen() {
-        setScreen(playScreen);
-    }
-
-    public void setMainScreen() {setScreen(mainScreen);}
 
     @Override
     public void resize(int width, int height) {
@@ -107,9 +82,7 @@ public class Platformer extends Game {
     }
 
     public void dispose() {
-        mainScreen.dispose();
-        //selectScreen.dispose();
-        //playScreen.dispose();
+        currentScreen.dispose();
         batch.dispose();
     }
 }

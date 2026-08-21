@@ -5,10 +5,8 @@ import at.drdracool.platformer.inputHandlers.MoveInputHandler;
 import at.drdracool.platformer.interfaces.BasicScreen;
 import at.drdracool.platformer.models.GameCharacter;
 import at.drdracool.platformer.services.BuildService;
-import at.drdracool.platformer.socketClients.SocketSendClient;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -87,8 +85,20 @@ public class BuildScreen implements BasicScreen {
         //table.debug();
         table.setFillParent(true);
         table.top().right();
-        table.padTop(row_height * 0.5f).padRight(col_width * 0.5f);
+        table.padTop(row_height * 0.5f).padRight(col_width * 0.5f).padLeft(col_width * 0.5f);
         stage.addActor(table);
+
+        table.top().left();
+        TextButton backButton = new TextButton("Go Back", skin, "big4");
+        backButton.getLabel().setAlignment(Align.center);
+        backButton.addListener(new InputListener(){
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                game.setNewScreen(new MainScreen(game));
+                return true;
+            }
+        });
+        table.add(backButton).width(col_width * 1.5f).height(row_height).expandX().left();
 
         Label label = new Label("Map Name: ", skin, "subtitle-c2");
         table.add(label).width(col_width * 2).height(row_height);
@@ -100,16 +110,26 @@ public class BuildScreen implements BasicScreen {
         saveButton.addListener(new InputListener(){
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-//                try {
-//                    socketSendClient.sendMessage("BUILD|" + game.connectionId);
-//                } catch (IOException e) {
-//                    throw new RuntimeException(e);
-//                }
-                game.setNewScreen(new SelectScreen(game));
+                try {
+                    game.socketSendClient.sendMessage("BUILD|SAVE|" + nameText.getText());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
                 return true;
             }
         });
         table.add(saveButton).width(col_width * 1.1f).height(row_height);
+
+        table.row();
+        String instructionText1 = "1/Place a still block 2/Place a moving block start";
+        Label instruction1 = new Label(instructionText1, skin, "c2");
+        table.add(instruction1).spaceTop(row_height * 0.3f);
+
+        table.row();
+        String instructionText2 = "3/Place a moving block end 4/Revert";
+        Label instruction2 = new Label(instructionText2, skin, "c2");
+        table.add(instruction2).spaceTop(row_height * 0.1f);
     }
 
     @Override
@@ -120,10 +140,12 @@ public class BuildScreen implements BasicScreen {
     private void draw() {
         ScreenUtils.clear(Color.BLACK);
 
+        buildService.drawCharactersAndBlocks(game.shape);
+
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
 
-        buildService.drawCharactersAndBlocks(game.shape);
+
     }
 
     @Override

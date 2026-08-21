@@ -1,7 +1,9 @@
 package at.drdracool.platformer.screens;
 
+import at.drdracool.platformer.inputHandlers.BuildInputHandler;
 import at.drdracool.platformer.inputHandlers.MoveInputHandler;
 import at.drdracool.platformer.interfaces.BasicScreen;
+import at.drdracool.platformer.models.GameCharacter;
 import at.drdracool.platformer.services.BuildService;
 import at.drdracool.platformer.socketClients.SocketSendClient;
 import com.badlogic.gdx.Gdx;
@@ -27,9 +29,10 @@ public class BuildScreen implements BasicScreen {
     Skin uiskin;
     Table table;
 
+    GameCharacter character = new GameCharacter();
+
     public BuildScreen(Platformer game) {
         this.game = game;
-        this.buildService = new BuildService();
     }
 
     public void handleMessage(String category, String message) {
@@ -48,6 +51,7 @@ public class BuildScreen implements BasicScreen {
 
     @Override
     public void show() {
+        buildService = new BuildService(character);
         skin = new Skin(Gdx.files.internal("skin/lgdxs-ui.json"));
         uiskin = new Skin(Gdx.files.internal("ui/uiskin.json"));
         setUpInputProcessor();
@@ -68,6 +72,9 @@ public class BuildScreen implements BasicScreen {
 
         MoveInputHandler moveInputHandler = new MoveInputHandler(game.socketSendClient, false);
         multiplexer.addProcessor(moveInputHandler);
+
+        BuildInputHandler buildInputHandler = new BuildInputHandler(game.socketSendClient, buildService);
+        multiplexer.addProcessor(buildInputHandler);
 
         Gdx.input.setInputProcessor(multiplexer);
     }

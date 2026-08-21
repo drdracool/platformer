@@ -2,6 +2,7 @@ package at.drdracool.platformer.services;
 
 import at.drdracool.platformer.models.Block;
 import at.drdracool.platformer.models.GameCharacter;
+import at.drdracool.platformer.models.Pair;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
@@ -11,11 +12,20 @@ import java.util.List;
 import static com.badlogic.gdx.net.HttpRequestBuilder.json;
 
 public class BuildService {
-    GameCharacter character = new GameCharacter();
+    GameCharacter character;
+
     List<Block> allBlockList = new ArrayList<>();
+
+    public BuildService(GameCharacter character) {
+        this.character = character;
+    }
 
     public void createNewCharacter(String message) {
         character = json.fromJson(GameCharacter.class, message);
+    }
+
+    public Pair getCharacterLocation() {
+        return new Pair(character.getLocationX(), character.getLocationY());
     }
 
     public void drawCharacter(ShapeRenderer shape) {

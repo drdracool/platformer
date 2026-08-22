@@ -88,12 +88,17 @@ public class BuildScreen implements BasicScreen {
         table.padTop(row_height * 0.5f).padRight(col_width * 0.5f).padLeft(col_width * 0.5f);
         stage.addActor(table);
 
-        table.top().left();
+        table.top().right();
         TextButton backButton = new TextButton("Go Back", skin, "big4");
         backButton.getLabel().setAlignment(Align.center);
         backButton.addListener(new InputListener(){
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                try {
+                    game.socketSendClient.sendMessage("BUILD|QUIT");
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
                 game.setNewScreen(new MainScreen(game));
                 return true;
             }
@@ -123,13 +128,13 @@ public class BuildScreen implements BasicScreen {
 
         table.row();
         String instructionText1 = "1/Place a still block 2/Place a moving block start";
-        Label instruction1 = new Label(instructionText1, skin, "c2");
-        table.add(instruction1).spaceTop(row_height * 0.3f);
+        Label instruction1 = new Label(instructionText1, skin, "c1");
+        table.add(instruction1).spaceTop(row_height * 0.3f).colspan(4).right();
 
         table.row();
         String instructionText2 = "3/Place a moving block end 4/Revert";
-        Label instruction2 = new Label(instructionText2, skin, "c2");
-        table.add(instruction2).spaceTop(row_height * 0.1f);
+        Label instruction2 = new Label(instructionText2, skin, "c1");
+        table.add(instruction2).spaceTop(row_height * 0.1f).colspan(4).right();
     }
 
     @Override

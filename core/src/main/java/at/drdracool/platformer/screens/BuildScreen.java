@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class BuildScreen implements BasicScreen {
     Platformer game;
@@ -28,6 +29,7 @@ public class BuildScreen implements BasicScreen {
     Table table;
 
     GameCharacter character = new GameCharacter();
+    Label message;
 
     public BuildScreen(Platformer game) {
         this.game = game;
@@ -44,6 +46,8 @@ public class BuildScreen implements BasicScreen {
             case("UpdateAllBlockLocations"):
                 buildService.updateAllBlockLocations(message);
                 break;
+            case("SAVED"):
+                setMessage("Your map is created!");
         }
     }
 
@@ -63,16 +67,17 @@ public class BuildScreen implements BasicScreen {
     }
 
     private void setUpInputProcessor() {
-        screenViewport = new ScreenViewport();
-        stage = new Stage(screenViewport);
         InputMultiplexer multiplexer = new InputMultiplexer();
-        multiplexer.addProcessor(stage);
 
         MoveInputHandler moveInputHandler = new MoveInputHandler(game.socketSendClient, false);
         multiplexer.addProcessor(moveInputHandler);
 
         BuildInputHandler buildInputHandler = new BuildInputHandler(game.socketSendClient, buildService);
         multiplexer.addProcessor(buildInputHandler);
+
+        screenViewport = new ScreenViewport();
+        stage = new Stage(screenViewport);
+        multiplexer.addProcessor(stage);
 
         Gdx.input.setInputProcessor(multiplexer);
     }
@@ -115,10 +120,15 @@ public class BuildScreen implements BasicScreen {
         saveButton.addListener(new InputListener(){
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                try {
-                    game.socketSendClient.sendMessage("BUILD|SAVE|" + nameText.getText());
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+                System.out.println("nameText.getText(): " + nameText.getText());
+                if (Objects.equals(nameText.getText(), "")) {
+                    setMessage("Please input map name");
+                } else {
+                    try {
+                        game.socketSendClient.sendMessage("BUILD|SAVE|" + nameText.getText());
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
 
                 return true;
@@ -135,6 +145,16 @@ public class BuildScreen implements BasicScreen {
         String instructionText2 = "3/Place a moving block end 4/Revert";
         Label instruction2 = new Label(instructionText2, skin, "c1");
         table.add(instruction2).spaceTop(row_height * 0.1f).colspan(4).right();
+
+        table.row();
+        message = new Label("", skin, "c2");
+        message.setScale(0);
+        table.add(message).spaceTop(row_height * 0.3f).colspan(4).right();
+    }
+
+    private void setMessage(String text) {
+        message.setText(text);
+        message.setScale(1);
     }
 
     @Override
@@ -149,8 +169,6 @@ public class BuildScreen implements BasicScreen {
 
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
-
-
     }
 
     @Override
@@ -175,6 +193,8 @@ public class BuildScreen implements BasicScreen {
 
     @Override
     public void dispose() {
-
+        stage.dispose();
+        skin.dispose();
+        uiskin.dispose();
     }
 }

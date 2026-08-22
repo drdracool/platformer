@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class SelectScreen implements BasicScreen {
     Platformer game;
@@ -50,6 +51,8 @@ public class SelectScreen implements BasicScreen {
     public void handleMessage(String category, String message) {
         int col_width = Gdx.graphics.getWidth() / 12;
         int row_height = Gdx.graphics.getHeight() / 12;
+
+        if (!Objects.equals(category, "SELECT")) return;
 
         mapNames = message.split(",");
         for (var mapName : mapNames) {

@@ -138,5 +138,7 @@ public class PlayScreen implements BasicScreen {
 
     @Override
     public void dispose() {
+        stage.dispose();
+        skin.dispose();
     }
 }

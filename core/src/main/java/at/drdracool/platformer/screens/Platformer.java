@@ -38,7 +38,7 @@ public class Platformer extends Game {
     }
 
     private void distributeServerMessage(String message) {
-//        System.out.println("received message: " + message);
+        System.out.println("received message: " + message);
         String[] fullMessage = message.split("\\|");
         switch (fullMessage[0]) {
             case("OnConnectionOpen"):

@@ -95,7 +95,7 @@ public class PlayScreen implements BasicScreen {
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-                game.setNewScreen(new SelectScreen(game));
+                game.setNewScreen(new SelectScreen(game, "PLAY"));
                 return true;
             }
         });

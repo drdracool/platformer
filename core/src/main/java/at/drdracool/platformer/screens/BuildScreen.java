@@ -58,12 +58,6 @@ public class BuildScreen implements BasicScreen {
         uiskin = new Skin(Gdx.files.internal("ui/uiskin.json"));
         setUpInputProcessor();
         setUpHeaderTable();
-
-        try {
-            game.socketSendClient.sendMessage("BUILD|START");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     private void setUpInputProcessor() {

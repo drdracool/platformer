@@ -53,30 +53,30 @@ public class MainScreen implements BasicScreen {
         table.setFillParent(true);
         stage.addActor(table);
 
-        TextButton buildMapButton = new TextButton("BUILD", skin, "oval3");
-        buildMapButton.getLabel().setAlignment(Align.right);
-        buildMapButton.addListener(new InputListener(){
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                game.setNewScreen(new BuildScreen(game));
-                return true;
-            }
-        });
-        table.add(buildMapButton).padLeft(col_width).width(col_width * 2).height(row_height);
-
         TextButton playButton = new TextButton("PLAY", skin, "oval4");
         playButton.getLabel().setAlignment(Align.right);
         playButton.addListener(new InputListener(){
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                game.setNewScreen(new SelectScreen(game));
+                game.setNewScreen(new SelectScreen(game, "PLAY"));
+                return true;
+            }
+        });
+        table.add(playButton).padLeft(col_width * 0.8f).width(col_width * 2).height(row_height);
+
+        TextButton buildMapButton = new TextButton("BUILD", skin, "oval3");
+        buildMapButton.getLabel().setAlignment(Align.right);
+        buildMapButton.addListener(new InputListener(){
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                game.setNewScreen(new SelectScreen(game, "BUILD"));
                 return true;
             }
         });
         table.row();
-        table.add(playButton).padBottom(row_height).padLeft(col_width).width(col_width * 2).height(row_height);
+        table.add(buildMapButton).padLeft(col_width * 0.8f).width(col_width * 2).height(row_height).padBottom(row_height);
+
         table.left().bottom();
-        table.setDebug(true);
     }
 
     @Override

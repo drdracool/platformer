@@ -24,15 +24,17 @@ public class SelectScreen implements BasicScreen {
     Table table;
 
     String[] mapNames;
+    String prefix;
 
-    public SelectScreen(Platformer game) {
+    public SelectScreen(Platformer game, String prefix) {
         this.game = game;
+        this.prefix = prefix;
     }
 
     @Override
     public void show() {
         try {
-            game.socketSendClient.sendMessage("SELECT");
+            game.socketSendClient.sendMessage(prefix + "|SELECT");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -49,6 +51,7 @@ public class SelectScreen implements BasicScreen {
     }
 
     public void handleMessage(String category, String message) {
+        System.out.println("select screen received message: " + category + message);
         int col_width = Gdx.graphics.getWidth() / 12;
         int row_height = Gdx.graphics.getHeight() / 12;
 
@@ -62,11 +65,16 @@ public class SelectScreen implements BasicScreen {
                 @Override
                 public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                     try {
-                        game.socketSendClient.sendMessage("PLAY|START|" + mapName);
+                        game.socketSendClient.sendMessage(prefix + "|START|" + mapName);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
-                    game.setNewScreen(new PlayScreen(game));
+                    if (prefix.equals("PLAY")) {
+                        game.setNewScreen(new PlayScreen(game));
+                    } else if (prefix.equals("BUILD")) {
+                        game.setNewScreen(new BuildScreen(game));
+                    }
+
                     return true;
                 }
             });

@@ -30,6 +30,7 @@ public class BuildScreen implements BasicScreen {
 
     GameCharacter character = new GameCharacter();
     Label message;
+    TextField nameTextField;
 
     public BuildScreen(Platformer game) {
         this.game = game;
@@ -40,6 +41,9 @@ public class BuildScreen implements BasicScreen {
             case ("InitChar"):
                 buildService.createNewCharacter(message);
                 break;
+            case("InitMapName"):
+                nameTextField.setText(message);
+                break;
             case("UpdateAllCharacterLocations"):
                 buildService.updateCharacterLocations(message);
                 break;
@@ -48,6 +52,7 @@ public class BuildScreen implements BasicScreen {
                 break;
             case("SAVED"):
                 setMessage("Your map is created!");
+                break;
         }
     }
 
@@ -106,20 +111,20 @@ public class BuildScreen implements BasicScreen {
 
         Label label = new Label("Map Name: ", skin, "subtitle-c2");
         table.add(label).width(col_width * 2).height(row_height);
-        TextField nameText = new TextField("", uiskin, "spinner");
-        table.add(nameText).width(col_width * 2).height(row_height).spaceRight(col_width * 0.3f);
+        nameTextField = new TextField("", uiskin, "spinner");
+        table.add(nameTextField).width(col_width * 2).height(row_height).spaceRight(col_width * 0.3f);
 
         TextButton saveButton = new TextButton("Save", skin, "big1");
         saveButton.getLabel().setAlignment(Align.center);
         saveButton.addListener(new InputListener(){
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                System.out.println("nameText.getText(): " + nameText.getText());
-                if (Objects.equals(nameText.getText(), "")) {
+                System.out.println("nameTextField.getText(): " + nameTextField.getText());
+                if (Objects.equals(nameTextField.getText(), "")) {
                     setMessage("Please input map name");
                 } else {
                     try {
-                        game.socketSendClient.sendMessage("BUILD|SAVE|" + nameText.getText());
+                        game.socketSendClient.sendMessage("BUILD|SAVE|" + nameTextField.getText());
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }

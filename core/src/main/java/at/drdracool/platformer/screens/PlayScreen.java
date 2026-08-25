@@ -38,7 +38,7 @@ public class PlayScreen implements BasicScreen {
             case("UpdateAllCharacterLocations"):
                 charactersLocation = message;
                 break;
-            case("UpdateAllMovingBlockLocations"):
+            case("UpdateAllBlockLocations"):
                 blocksLocation = message;
                 break;
         }

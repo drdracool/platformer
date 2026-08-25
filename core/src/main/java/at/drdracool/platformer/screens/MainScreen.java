@@ -1,10 +1,7 @@
 package at.drdracool.platformer.screens;
 
 import at.drdracool.platformer.interfaces.BasicScreen;
-import at.drdracool.platformer.services.BuildService;
-import at.drdracool.platformer.socketClients.SocketSendClient;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -18,8 +15,6 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import java.io.IOException;
-import java.net.Socket;
 
 public class MainScreen implements BasicScreen {
     final Platformer game;

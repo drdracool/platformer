@@ -4,7 +4,6 @@ import at.drdracool.platformer.inputHandlers.BuildInputHandler;
 import at.drdracool.platformer.inputHandlers.MoveInputHandler;
 import at.drdracool.platformer.interfaces.BasicScreen;
 import at.drdracool.platformer.models.GameCharacter;
-import at.drdracool.platformer.services.BuildService;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
@@ -21,14 +20,15 @@ import java.util.Objects;
 
 public class BuildScreen implements BasicScreen {
     Platformer game;
-    BuildService buildService;
     Stage stage;
     ScreenViewport screenViewport;
     Skin skin;
     Skin uiskin;
     Table table;
 
-    GameCharacter character = new GameCharacter();
+    String charactersLocation = "";
+    String blocksLocation = "";
+
     Label message;
     TextField nameTextField;
 
@@ -38,17 +38,11 @@ public class BuildScreen implements BasicScreen {
 
     public void handleMessage(String category, String message) {
         switch (category) {
-            case ("InitChar"):
-                buildService.createNewCharacter(message);
-                break;
-            case("InitMapName"):
-                nameTextField.setText(message);
-                break;
             case("UpdateAllCharacterLocations"):
-                buildService.updateCharacterLocations(message);
+                charactersLocation = message;
                 break;
             case("UpdateAllBlockLocations"):
-                buildService.updateAllBlockLocations(message);
+                blocksLocation = message;
                 break;
             case("SAVED"):
                 setMessage("Your map is created!");
@@ -58,7 +52,6 @@ public class BuildScreen implements BasicScreen {
 
     @Override
     public void show() {
-        buildService = new BuildService(character);
         skin = new Skin(Gdx.files.internal("skin/lgdxs-ui.json"));
         uiskin = new Skin(Gdx.files.internal("ui/uiskin.json"));
         setUpInputProcessor();
@@ -71,7 +64,7 @@ public class BuildScreen implements BasicScreen {
         MoveInputHandler moveInputHandler = new MoveInputHandler(game.socketSendClient, false);
         multiplexer.addProcessor(moveInputHandler);
 
-        BuildInputHandler buildInputHandler = new BuildInputHandler(game.socketSendClient, buildService);
+        BuildInputHandler buildInputHandler = new BuildInputHandler(game.socketSendClient);
         multiplexer.addProcessor(buildInputHandler);
 
         screenViewport = new ScreenViewport();
@@ -164,7 +157,8 @@ public class BuildScreen implements BasicScreen {
     private void draw() {
         ScreenUtils.clear(Color.BLACK);
 
-        buildService.drawCharactersAndBlocks(game.shape);
+        game.drawMapService.drawCharacters(charactersLocation);
+        game.drawMapService.drawBlocks(blocksLocation);
 
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();

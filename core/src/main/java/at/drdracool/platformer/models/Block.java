@@ -5,15 +5,17 @@ public class Block {
     Pair location;
     Integer width;
     Integer height;
+    boolean isMoving;
 
     public Block() {
 
     }
 
-    public Block(Pair location, Integer width, Integer height) {
+    public Block(Pair location, Integer width, Integer height, boolean isMoving) {
         this.location = location;
         this.width = width;
         this.height = height;
+        this.isMoving = isMoving;
     }
 
     public Pair getLocation() {
@@ -31,6 +33,8 @@ public class Block {
     public Integer getHeight() {
         return height;
     }
+
+    public boolean isMoving() {return isMoving;}
 
 
 }

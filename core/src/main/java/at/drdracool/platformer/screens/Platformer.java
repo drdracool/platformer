@@ -1,7 +1,7 @@
 package at.drdracool.platformer.screens;
 
-import at.drdracool.platformer.inputHandlers.MoveInputHandler;
 import at.drdracool.platformer.interfaces.BasicScreen;
+import at.drdracool.platformer.services.DrawMapService;
 import at.drdracool.platformer.socketClients.SocketReceiveClient;
 import at.drdracool.platformer.socketClients.SocketSendClient;
 import com.badlogic.gdx.Game;
@@ -18,6 +18,7 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 public class Platformer extends Game {
     public ExtendViewport viewport;
     public SpriteBatch batch;
+    public DrawMapService drawMapService;
     ShapeRenderer shape;
     OrthographicCamera camera;
     Socket socket;
@@ -32,6 +33,7 @@ public class Platformer extends Game {
         viewport = new ExtendViewport(8, 5, camera);
         batch = new SpriteBatch();
         shape = new ShapeRenderer();
+        drawMapService = new DrawMapService(shape);
 
         initConnection();
         setNewScreen(new MainScreen(this));

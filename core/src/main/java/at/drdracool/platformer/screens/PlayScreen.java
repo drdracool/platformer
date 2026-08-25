@@ -1,12 +1,9 @@
 package at.drdracool.platformer.screens;
 
 import at.drdracool.platformer.interfaces.BasicScreen;
-import at.drdracool.platformer.services.GameService;
 import at.drdracool.platformer.inputHandlers.MoveInputHandler;
-import at.drdracool.platformer.socketClients.SocketSendClient;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -24,11 +21,13 @@ import java.io.IOException;
 public class PlayScreen implements BasicScreen {
     Platformer game;
     FPSLogger fpsLogger;
-    GameService gameService;
     Stage stage;
     ScreenViewport screenViewport;
     Skin skin;
     Table table;
+
+    String charactersLocation = "";
+    String blocksLocation = "";
 
     public PlayScreen(Platformer game) {
         this.game = game;
@@ -36,28 +35,17 @@ public class PlayScreen implements BasicScreen {
 
     public void handleMessage(String category, String message) {
         switch (category) {
-            case("InitChar"):
-                gameService.createOwnCharacter(game.connectionId, message);
-                break;
             case("UpdateAllCharacterLocations"):
-                gameService.updateCharacterLocations(message);
-                break;
-            case("InitMap"):
-                gameService.initiateMap(message);
+                charactersLocation = message;
                 break;
             case("UpdateAllMovingBlockLocations"):
-                gameService.updateAllMovingBlockLocations(message);
-                break;
-            case("RemoveCharacter"):
-                Gdx.app.log("Network-MainThread", "Received connection close request from socket server: " + message);
-                gameService.removeDisconnectedConnection(message);
+                blocksLocation = message;
                 break;
         }
     }
 
     @Override
     public void show() {
-        gameService = new GameService();
         fpsLogger = new FPSLogger();
         skin = new Skin(Gdx.files.internal("skin/lgdxs-ui.json"));
 
@@ -110,7 +98,9 @@ public class PlayScreen implements BasicScreen {
 
     private void draw() {
         ScreenUtils.clear(Color.BLACK);
-        gameService.drawCharactersAndBlocks(game.shape);
+
+        game.drawMapService.drawCharacters(charactersLocation);
+        game.drawMapService.drawBlocks(blocksLocation);
 
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();

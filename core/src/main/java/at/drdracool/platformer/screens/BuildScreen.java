@@ -44,6 +44,8 @@ public class BuildScreen implements BasicScreen {
             case("UpdateAllBlockLocations"):
                 blocksLocation = message;
                 break;
+            case("UpdateMapName"):
+                nameTextField.setText(message);
             case("SAVED"):
                 setMessage("Your map is created!");
                 break;

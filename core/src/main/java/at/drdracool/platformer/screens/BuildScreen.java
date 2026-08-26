@@ -39,16 +39,20 @@ public class BuildScreen implements BasicScreen {
     public void handleMessage(String category, String message) {
         switch (category) {
             case("UpdateAllCharacterLocations"):
-                charactersLocation = message;
+                charactersLocation = message; {
+
+            }
                 break;
             case("UpdateAllBlockLocations"):
                 blocksLocation = message;
                 break;
             case("UpdateMapName"):
                 nameTextField.setText(message);
-            case("SAVED"):
-                setMessage("Your map is created!");
                 break;
+            case("ReturnSaveResult"):
+                setMessage(message);
+                break;
+
         }
     }
 

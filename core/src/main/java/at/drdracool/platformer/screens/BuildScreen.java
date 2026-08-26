@@ -98,7 +98,7 @@ public class BuildScreen implements BasicScreen {
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-                game.setNewScreen(new MainScreen(game));
+                game.setNewScreen(new SelectScreen(game, "BUILD"));
                 return true;
             }
         });

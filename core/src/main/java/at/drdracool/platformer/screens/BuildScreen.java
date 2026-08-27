@@ -144,6 +144,11 @@ public class BuildScreen implements BasicScreen {
         table.add(instruction2).spaceTop(row_height * 0.1f).colspan(4).right();
 
         table.row();
+        String instructionText3 = "5/Remove all the blocks on the character";
+        Label instruction3 = new Label(instructionText3, skin, "c1");
+        table.add(instruction3).spaceTop(row_height * 0.1f).colspan(4).right();
+
+        table.row();
         message = new Label("", skin, "c2");
         message.setScale(0);
         table.add(message).spaceTop(row_height * 0.3f).colspan(4).right();

@@ -17,7 +17,7 @@ public class BuildInputHandler extends InputAdapter {
 
     @Override
     public boolean keyTyped(char input) {
-        List<Character> validCharacters = Arrays.asList('1', '2', '3', '4');
+        List<Character> validCharacters = Arrays.asList('1', '2', '3', '4', '5');
         if (validCharacters.contains(input)) {
             try {
                 socketSendClient.sendMessage("BUILD|PLACE|" + (input - '0'));

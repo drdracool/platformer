@@ -3,6 +3,7 @@ package at.drdracool.platformer.screens;
 import at.drdracool.platformer.inputHandlers.BuildInputHandler;
 import at.drdracool.platformer.inputHandlers.MoveInputHandler;
 import at.drdracool.platformer.interfaces.BasicScreen;
+import at.drdracool.platformer.models.CustomizedStage;
 import at.drdracool.platformer.models.GameCharacter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
@@ -20,7 +21,7 @@ import java.util.Objects;
 
 public class BuildScreen implements BasicScreen {
     Platformer game;
-    Stage stage;
+    CustomizedStage stage;
     ScreenViewport screenViewport;
     Skin skin;
     Skin uiskin;
@@ -39,9 +40,7 @@ public class BuildScreen implements BasicScreen {
     public void handleMessage(String category, String message) {
         switch (category) {
             case("UpdateAllCharacterLocations"):
-                charactersLocation = message; {
-
-            }
+                charactersLocation = message;
                 break;
             case("UpdateAllBlockLocations"):
                 blocksLocation = message;
@@ -74,7 +73,7 @@ public class BuildScreen implements BasicScreen {
         multiplexer.addProcessor(buildInputHandler);
 
         screenViewport = new ScreenViewport();
-        stage = new Stage(screenViewport);
+        stage = new CustomizedStage(screenViewport);
         multiplexer.addProcessor(stage);
 
         Gdx.input.setInputProcessor(multiplexer);
@@ -112,12 +111,12 @@ public class BuildScreen implements BasicScreen {
         table.add(label).width(col_width * 2).height(row_height);
         nameTextField = new TextField("", uiskin, "spinner");
         table.add(nameTextField).width(col_width * 2).height(row_height).spaceRight(col_width * 0.3f);
-
         TextButton saveButton = new TextButton("Save", skin, "big1");
         saveButton.getLabel().setAlignment(Align.center);
         saveButton.addListener(new InputListener(){
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                setMessage("");
                 System.out.println("nameTextField.getText(): " + nameTextField.getText());
                 if (Objects.equals(nameTextField.getText(), "")) {
                     setMessage("Please input map name");

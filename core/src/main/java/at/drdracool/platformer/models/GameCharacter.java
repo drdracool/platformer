@@ -2,61 +2,28 @@ package at.drdracool.platformer.models;
 
 public class GameCharacter {
     String connectionId;
-    float locationX;
-    float locationY;
-    float width;
-    float height;
+    Pair location;
+    float radius;
 
     public GameCharacter() {
 
     }
 
-    public GameCharacter(String connectionId, float locationX, float locationY, float width, float height) {
+    public GameCharacter(String connectionId, Pair location, float radius) {
         this.connectionId = connectionId;
-        this.locationX = locationX;
-        this.locationY = locationY;
-        this.width = width;
-        this.height = height;
-    }
-
-    public String getConnectionId() {
-        return connectionId;
-    }
-
-    public void setConnectionId(String connectionId) {
-        this.connectionId = connectionId;
+        this.location = location;
+        this.radius = radius;
     }
 
     public float getLocationX() {
-        return locationX;
-    }
-
-    public void setLocationX(float locationX) {
-        this.locationX = locationX;
+        return location.x;
     }
 
     public float getLocationY() {
-        return locationY;
+        return location.y;
     }
 
-    public void setLocationY(float locationY) {
-        this.locationY = locationY;
+    public float getRadius() {
+        return radius;
     }
-
-    public float getWidth() {
-        return width;
-    }
-
-    public void setWidth(float width) {
-        this.width = width;
-    }
-
-    public float getHeight() {
-        return height;
-    }
-
-    public void setHeight(float height) {
-        this.height = height;
-    }
-
 }

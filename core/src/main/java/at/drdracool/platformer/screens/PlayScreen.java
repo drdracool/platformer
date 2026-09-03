@@ -27,7 +27,8 @@ public class PlayScreen implements BasicScreen {
     Table table;
 
     String charactersLocation = "";
-    String blocksLocation = "";
+    String movingBlockLocations = "";
+    String staticBlockLocations = "";
 
     public PlayScreen(Platformer game) {
         this.game = game;
@@ -36,10 +37,16 @@ public class PlayScreen implements BasicScreen {
     public void handleMessage(String category, String message) {
         switch (category) {
             case("UpdateAllCharacterLocations"):
+                System.out.println("UpdateAllCharacterLocations: " + message);
                 charactersLocation = message;
                 break;
-            case("UpdateAllBlockLocations"):
-                blocksLocation = message;
+            case("UpdateMovingBlockLocations"):
+                System.out.println("UpdateMovingBlockLocations: " + message);
+                movingBlockLocations = message;
+                break;
+            case("UpdateStaticBlockLocations"):
+                System.out.println("UpdateStaticBlockLocations: " + message);
+                staticBlockLocations = message;
                 break;
         }
     }
@@ -100,7 +107,8 @@ public class PlayScreen implements BasicScreen {
         ScreenUtils.clear(Color.BLACK);
 
         game.drawMapService.drawCharacters(charactersLocation);
-        game.drawMapService.drawBlocks(blocksLocation);
+        game.drawMapService.drawMovingBlocks(movingBlockLocations);
+        game.drawMapService.drawStaticBlocks(staticBlockLocations);
 
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();

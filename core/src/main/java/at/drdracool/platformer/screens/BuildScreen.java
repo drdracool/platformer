@@ -4,13 +4,11 @@ import at.drdracool.platformer.inputHandlers.BuildInputHandler;
 import at.drdracool.platformer.inputHandlers.MoveInputHandler;
 import at.drdracool.platformer.interfaces.BasicScreen;
 import at.drdracool.platformer.models.CustomizedStage;
-import at.drdracool.platformer.models.GameCharacter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -28,7 +26,8 @@ public class BuildScreen implements BasicScreen {
     Table table;
 
     String charactersLocation = "";
-    String blocksLocation = "";
+    String movingBlockLocations = "";
+    String staticBlockLocations = "";
 
     Label message;
     TextField nameTextField;
@@ -42,8 +41,11 @@ public class BuildScreen implements BasicScreen {
             case("UpdateAllCharacterLocations"):
                 charactersLocation = message;
                 break;
-            case("UpdateAllBlockLocations"):
-                blocksLocation = message;
+            case("UpdateMovingBlockLocations"):
+                movingBlockLocations = message;
+                break;
+            case("UpdateStaticBlockLocations"):
+                staticBlockLocations = message;
                 break;
             case("UpdateMapName"):
                 nameTextField.setText(message);
@@ -168,7 +170,8 @@ public class BuildScreen implements BasicScreen {
         ScreenUtils.clear(Color.BLACK);
 
         game.drawMapService.drawCharacters(charactersLocation);
-        game.drawMapService.drawBlocks(blocksLocation);
+        game.drawMapService.drawMovingBlocks(movingBlockLocations);
+        game.drawMapService.drawStaticBlocks(staticBlockLocations);
 
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();

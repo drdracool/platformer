@@ -1,14 +1,14 @@
 package at.drdracool.platformer.models;
 
 public class Pair {
-    public float x;
-    public float y;
+    public int x;
+    public int y;
 
     public Pair() {
 
     }
 
-    public Pair(float x, float y) {
+    public Pair(int x, int y) {
         this.x = x;
         this.y = y;
     }
@@ -22,11 +22,11 @@ public class Pair {
         return true;
     }
 
-    public void updateX(float delta) {
+    public void updateX(int delta) {
         x += delta;
     }
 
-    public void updateY(float delta) {
+    public void updateY(int delta) {
         y += delta;
     }
 }

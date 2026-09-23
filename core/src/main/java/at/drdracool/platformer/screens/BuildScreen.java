@@ -42,9 +42,11 @@ public class BuildScreen implements BasicScreen {
                 charactersLocation = message;
                 break;
             case("UpdateMovingBlockLocations"):
+//                System.out.println("UpdateMovingBlockLocations: " + message);
                 movingBlockLocations = message;
                 break;
             case("UpdateStaticBlockLocations"):
+//                System.out.println("UpdateStaticBlockLocations: " + message);
                 staticBlockLocations = message;
                 break;
             case("UpdateMapName"):
@@ -136,7 +138,7 @@ public class BuildScreen implements BasicScreen {
         table.add(saveButton).width(col_width * 1.1f).height(row_height);
 
         table.row();
-        String instructionText1 = "1/Place a still block 2/Place a moving block start";
+        String instructionText1 = "1/Place a still block start/end 2/Place a moving block start";
         Label instruction1 = new Label(instructionText1, skin, "c1");
         table.add(instruction1).spaceTop(row_height * 0.3f).colspan(4).right();
 

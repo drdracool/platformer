@@ -26,36 +26,15 @@ public class PlayScreen implements BasicScreen {
     Skin skin;
     Table table;
 
-    String charactersLocation = "";
-    String movingBlockLocations = "";
-    String staticBlockLocations = "";
-    String doorLocations = "";
-    String keyLocations = "";
+    String mapContent = "";
 
     public PlayScreen(Platformer game) {
         this.game = game;
     }
 
     public void handleMessage(String category, String message) {
-        switch (category) {
-            case("UpdateAllCharacterLocations"):
-                System.out.println("UpdateAllCharacterLocations: " + message);
-                charactersLocation = message;
-                break;
-            case("UpdateMovingBlockLocations"):
-                System.out.println("UpdateMovingBlockLocations: " + message);
-                movingBlockLocations = message;
-                break;
-            case("UpdateStaticBlockLocations"):
-                System.out.println("UpdateStaticBlockLocations: " + message);
-                staticBlockLocations = message;
-                break;
-            case("UpdateDoorLocations"):
-                doorLocations = message;
-                break;
-            case("UpdateKeyLocations"):
-                keyLocations = message;
-                break;
+        if (category.equals("UpdateMapContent")) {
+            mapContent = message;
         }
     }
 
@@ -114,11 +93,7 @@ public class PlayScreen implements BasicScreen {
     private void draw() {
         ScreenUtils.clear(Color.BLACK);
 
-        game.drawMapService.drawCharacters(charactersLocation);
-        game.drawMapService.drawMovingBlocks(movingBlockLocations);
-        game.drawMapService.drawStaticBlocks(staticBlockLocations);
-        game.drawMapService.drawDoors(doorLocations);
-        game.drawMapService.drawKeys(keyLocations);
+        game.drawMapService.drawMapContent(mapContent);
 
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();

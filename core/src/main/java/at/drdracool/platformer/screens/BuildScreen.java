@@ -25,11 +25,7 @@ public class BuildScreen implements BasicScreen {
     Skin uiskin;
     Table table;
 
-    String charactersLocation = "";
-    String movingBlockLocations = "";
-    String staticBlockLocations = "";
-    String doorLocations = "";
-    String keyLocations = "";
+    String mapContent = "";
 
     Label message;
     TextField nameTextField;
@@ -40,22 +36,8 @@ public class BuildScreen implements BasicScreen {
 
     public void handleMessage(String category, String message) {
         switch (category) {
-            case("UpdateAllCharacterLocations"):
-                charactersLocation = message;
-                break;
-            case("UpdateMovingBlockLocations"):
-//                System.out.println("UpdateMovingBlockLocations: " + message);
-                movingBlockLocations = message;
-                break;
-            case("UpdateStaticBlockLocations"):
-//                System.out.println("UpdateStaticBlockLocations: " + message);
-                staticBlockLocations = message;
-                break;
-            case("UpdateDoorLocations"):
-                doorLocations = message;
-                break;
-            case("UpdateKeyLocations"):
-                keyLocations = message;
+            case("UpdateMapContent"):
+                mapContent = message;
                 break;
             case("UpdateMapName"):
                 nameTextField.setText(message);
@@ -63,7 +45,6 @@ public class BuildScreen implements BasicScreen {
             case("ReturnSaveResult"):
                 setMessage(message);
                 break;
-
         }
     }
 
@@ -179,11 +160,7 @@ public class BuildScreen implements BasicScreen {
     private void draw() {
         ScreenUtils.clear(Color.BLACK);
 
-        game.drawMapService.drawCharacters(charactersLocation);
-        game.drawMapService.drawMovingBlocks(movingBlockLocations);
-        game.drawMapService.drawStaticBlocks(staticBlockLocations);
-        game.drawMapService.drawDoors(doorLocations);
-        game.drawMapService.drawKeys(keyLocations);
+        game.drawMapService.drawMapContent(mapContent);
 
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();

@@ -127,17 +127,27 @@ public class BuildScreen implements BasicScreen {
         table.add(saveButton).width(col_width * 1.1f).height(row_height);
 
         table.row();
-        String instructionText1 = "1/Place a still block start/end 2/Place a moving block start";
+        String instructionText1 = "1/Place a STATIC block start/end";
         Label instruction1 = new Label(instructionText1, skin, "c1");
         table.add(instruction1).spaceTop(row_height * 0.3f).colspan(4).right();
 
         table.row();
-        String instructionText2 = "3/Place a moving block end 4/Revert";
+        String instructionText4 = "2/Place a MOVING block start/end";
+        Label instruction4 = new Label(instructionText4, skin, "c1");
+        table.add(instruction4).spaceTop(row_height * 0.1f).colspan(4).right();
+
+        table.row();
+        String instructionText2 = "3/Place a DOOR start/end or a KEY";
         Label instruction2 = new Label(instructionText2, skin, "c1");
         table.add(instruction2).spaceTop(row_height * 0.1f).colspan(4).right();
 
         table.row();
-        String instructionText3 = "5/Remove all the blocks on the character";
+        String instructionText5 = "4/REVERT the last step";
+        Label instruction5 = new Label(instructionText5, skin, "c1");
+        table.add(instruction5).spaceTop(row_height * 0.1f).colspan(4).right();
+
+        table.row();
+        String instructionText3 = "5/REMOVE all the blocks on the character";
         Label instruction3 = new Label(instructionText3, skin, "c1");
         table.add(instruction3).spaceTop(row_height * 0.1f).colspan(4).right();
 

@@ -10,6 +10,13 @@ import static com.badlogic.gdx.net.HttpRequestBuilder.json;
 
 public class DrawMapService {
     ShapeRenderer shape;
+    Color blue = new Color(0.21176471f, 0.5254902f, 1, 1);
+    Color darkBlue = new Color(0.035f, 0.282f, 0.922f, 1);
+    Color orange = new Color(1, 0.6f, 0.204f, 1);
+    Color yellowGreen = new Color(0.659f, 0.616f, 0.204f, 1);
+    Color yellow = new Color(0.945f, 0.769f, 0.067f, 1);
+    Color purple = new Color(0.58f, 0.627f, 1, 1);
+    Color beige = new Color(0.922f, 0.906f, 0.757f, 1);
 
     public DrawMapService(ShapeRenderer shape) {
         this.shape = shape;
@@ -23,31 +30,31 @@ public class DrawMapService {
 
         CircleDTO[] characters = json.fromJson(CircleDTO[].class, contents.getCharacterLocations());
         for (var character : characters) {
-            shape.setColor(Color.valueOf("54786A"));
+            shape.setColor(yellowGreen);
             shape.circle(character.getLocation().x, character.getLocation().y, character.getRadius());
         }
 
         BlockDTO[] movingBlocks = json.fromJson(BlockDTO[].class, contents.getMovingBlockLocations());
         for (var block : movingBlocks) {
-            shape.setColor(Color.valueOf("AA5725"));
+            shape.setColor(purple);
             shape.rect(block.getLocation().x, block.getLocation().y, block.getSize().x, block.getSize().y);
         }
 
         BlockDTO[] staticBlocks = json.fromJson(BlockDTO[].class, contents.getStaticBlockLocations());
+        if (staticBlocks.length > 0) {
+        }
         for (var block : staticBlocks) {
-            Color color = Color.valueOf("624B1C");
-            shape.rect(block.getLocation().x, block.getLocation().y, 0, 0, block.getSize().x, block.getSize().y, 1, 1, block.getDegree(), color, color, color, color);
+            shape.rect(block.getLocation().x, block.getLocation().y, 0, 0, block.getSize().x, block.getSize().y, 1, 1, block.getDegree(), blue, blue, blue, blue);
         }
 
         BlockDTO[] doors = json.fromJson(BlockDTO[].class, contents.getDoorLocations());
         for (var block : doors) {
-            Color color = Color.valueOf("EFCF83");
-            shape.rect(block.getLocation().x, block.getLocation().y, 0, 0, block.getSize().x, block.getSize().y, 1, 1, block.getDegree(), color, color, color, color);
+            shape.rect(block.getLocation().x, block.getLocation().y, 0, 0, block.getSize().x, block.getSize().y, 1, 1, block.getDegree(), yellow, yellow, yellow, yellow);
         }
 
         CircleDTO[] keys = json.fromJson(CircleDTO[].class, contents.getKeyLocations());
         for (var key : keys) {
-            shape.setColor(Color.valueOf("DED18D"));
+            shape.setColor(yellow);
             shape.circle(key.getLocation().x, key.getLocation().y, key.getRadius());
         }
 

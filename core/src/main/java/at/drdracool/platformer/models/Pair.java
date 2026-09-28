@@ -13,4 +13,8 @@ public class Pair {
         this.y = y;
     }
 
+    public String print() {
+        return " x: " + x + " y: " + y;
+    }
+
 }

@@ -58,6 +58,11 @@ public class DrawMapService {
             shape.circle(key.getLocation().x, key.getLocation().y, key.getRadius());
         }
 
+        CircleDTO exit = json.fromJson(CircleDTO.class, contents.getExitLocation());
+        System.out.println(exit.getLocation().print());
+        shape.setColor(beige);
+        shape.circle(exit.getLocation().x, exit.getLocation().y, exit.getRadius());
+
         shape.end();
     }
 }

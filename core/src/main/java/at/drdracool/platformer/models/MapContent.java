@@ -6,13 +6,15 @@ public class MapContent {
     String staticBlockLocations;
     String doorLocations;
     String keyLocations;
+    String exitLocation;
 
-    public MapContent(String characterLocations, String movingBlockLocations, String staticBlockLocations, String doorLocations, String keyLocations) {
+    public MapContent(String characterLocations, String movingBlockLocations, String staticBlockLocations, String doorLocations, String keyLocations, String exitLocation) {
         this.characterLocations = characterLocations;
         this.movingBlockLocations = movingBlockLocations;
         this.staticBlockLocations = staticBlockLocations;
         this.doorLocations = doorLocations;
         this.keyLocations = keyLocations;
+        this.exitLocation = exitLocation;
     }
 
     public MapContent() {
@@ -37,4 +39,9 @@ public class MapContent {
     public String getKeyLocations() {
         return keyLocations;
     }
+
+    public String getExitLocation() {
+        return exitLocation;
+    }
+
 }

@@ -28,12 +28,6 @@ public class DrawMapService {
 
         shape.begin(ShapeRenderer.ShapeType.Filled);
 
-        CircleDTO[] characters = json.fromJson(CircleDTO[].class, contents.getCharacterLocations());
-        for (var character : characters) {
-            shape.setColor(yellowGreen);
-            shape.circle(character.getLocation().x, character.getLocation().y, character.getRadius());
-        }
-
         BlockDTO[] movingBlocks = json.fromJson(BlockDTO[].class, contents.getMovingBlockLocations());
         for (var block : movingBlocks) {
             shape.setColor(purple);
@@ -41,8 +35,6 @@ public class DrawMapService {
         }
 
         BlockDTO[] staticBlocks = json.fromJson(BlockDTO[].class, contents.getStaticBlockLocations());
-        if (staticBlocks.length > 0) {
-        }
         for (var block : staticBlocks) {
             shape.rect(block.getLocation().x, block.getLocation().y, 0, 0, block.getSize().x, block.getSize().y, 1, 1, block.getDegree(), blue, blue, blue, blue);
         }
@@ -59,10 +51,15 @@ public class DrawMapService {
         }
 
         CircleDTO exit = json.fromJson(CircleDTO.class, contents.getExitLocation());
-        System.out.println(exit.getLocation().print());
         shape.setColor(beige);
         shape.circle(exit.getLocation().x, exit.getLocation().y, exit.getRadius());
 
+        CircleDTO[] characters = json.fromJson(CircleDTO[].class, contents.getCharacterLocations());
+        System.out.println("last character location: " + characters[0].getLocation().print());
+        for (var character : characters) {
+            shape.setColor(yellowGreen);
+            shape.circle(character.getLocation().x, character.getLocation().y, character.getRadius());
+        }
         shape.end();
     }
 }

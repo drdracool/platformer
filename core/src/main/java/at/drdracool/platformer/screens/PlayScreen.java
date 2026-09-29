@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -25,6 +26,7 @@ public class PlayScreen implements BasicScreen {
     ScreenViewport screenViewport;
     Skin skin;
     Table table;
+    Label timeElapsed;
 
     String mapContent = "";
 
@@ -33,8 +35,16 @@ public class PlayScreen implements BasicScreen {
     }
 
     public void handleMessage(String category, String message) {
-        if (category.equals("UpdateMapContent")) {
-            mapContent = message;
+        switch (category) {
+            case "UpdateMapContent":
+                mapContent = message;
+                break;
+            case "UpdateTimer":
+                System.out.println("UpdateTimer: " + message);
+                timeElapsed.setText("Time elapsed: " + message + " seconds");
+            case "GAMEOVER":
+                System.out.println("game over");
+                break;
         }
     }
 
@@ -67,6 +77,10 @@ public class PlayScreen implements BasicScreen {
 
         int col_width = Gdx.graphics.getWidth() / 12;
         int row_height = Gdx.graphics.getHeight() / 12;
+
+        timeElapsed = new Label("", skin, "c1");
+        table.add(timeElapsed).padTop(row_height * 0.5f).padRight(col_width * 0.5f);
+
         TextButton mapButton = new TextButton("Go Back", skin, "big1");
         mapButton.getLabel().setAlignment(Align.center);
         mapButton.addListener(new InputListener(){
@@ -86,7 +100,7 @@ public class PlayScreen implements BasicScreen {
 
     @Override
     public void render (float delta) {
-        fpsLogger.log();
+        //fpsLogger.log();
         draw();
     }
 

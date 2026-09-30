@@ -3,7 +3,7 @@ package at.drdracool.platformer.screens;
 import at.drdracool.platformer.inputHandlers.BuildInputHandler;
 import at.drdracool.platformer.inputHandlers.MoveInputHandler;
 import at.drdracool.platformer.interfaces.BasicScreen;
-import at.drdracool.platformer.models.CustomizedStage;
+import at.drdracool.platformer.models.CustomStage;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
@@ -19,9 +19,9 @@ import java.util.Objects;
 
 public class BuildScreen implements BasicScreen {
     Platformer game;
-    CustomizedStage stage;
+    CustomStage stage;
     ScreenViewport screenViewport;
-    Skin skin;
+    public Skin skin;
     Skin uiskin;
     Table table;
 
@@ -66,7 +66,7 @@ public class BuildScreen implements BasicScreen {
         multiplexer.addProcessor(buildInputHandler);
 
         screenViewport = new ScreenViewport();
-        stage = new CustomizedStage(screenViewport);
+        stage = new CustomStage(screenViewport);
         multiplexer.addProcessor(stage);
 
         Gdx.input.setInputProcessor(multiplexer);

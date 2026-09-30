@@ -2,16 +2,15 @@ package at.drdracool.platformer.screens;
 
 import at.drdracool.platformer.interfaces.BasicScreen;
 import at.drdracool.platformer.inputHandlers.MoveInputHandler;
+import at.drdracool.platformer.models.CustomDialog;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.graphics.Color;
@@ -25,10 +24,16 @@ public class PlayScreen implements BasicScreen {
     Stage stage;
     ScreenViewport screenViewport;
     Skin skin;
+    Skin skinUI;
     Table table;
     Label timeElapsed;
+    String finalTime = "";
 
     String mapContent = "";
+
+    CustomDialog dialog;
+    int col_width = Gdx.graphics.getWidth() / 12;
+    int row_height = Gdx.graphics.getHeight() / 12;
 
     public PlayScreen(Platformer game) {
         this.game = game;
@@ -40,10 +45,13 @@ public class PlayScreen implements BasicScreen {
                 mapContent = message;
                 break;
             case "UpdateTimer":
-                System.out.println("UpdateTimer: " + message);
+                finalTime = message;
                 timeElapsed.setText("Time elapsed: " + message + " seconds");
+                break;
             case "GAMEOVER":
                 System.out.println("game over");
+                dialog.addSmallText("Total time: " + finalTime + " seconds");
+                dialog.show(stage);
                 break;
         }
     }
@@ -52,9 +60,21 @@ public class PlayScreen implements BasicScreen {
     public void show() {
         fpsLogger = new FPSLogger();
         skin = new Skin(Gdx.files.internal("skin/lgdxs-ui.json"));
-
+        skinUI = new Skin(Gdx.files.internal("ui/uiskin.json"));
         setUpInputProcessor();
         setUpHeaderTable();
+        dialog = new CustomDialog("", skinUI, col_width, row_height, skin);
+        dialog.text("CONGRATS! You've won");
+        dialog.getContentTable().row();
+
+        InputListener listener = new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setNewScreen(new MainScreen(game));
+            }
+        };
+        dialog.button("Return Home", listener);
+
     }
 
     private void setUpInputProcessor() {
@@ -74,9 +94,6 @@ public class PlayScreen implements BasicScreen {
         table.setFillParent(true);
         table.top().right();
         stage.addActor(table);
-
-        int col_width = Gdx.graphics.getWidth() / 12;
-        int row_height = Gdx.graphics.getHeight() / 12;
 
         timeElapsed = new Label("", skin, "c1");
         table.add(timeElapsed).padTop(row_height * 0.5f).padRight(col_width * 0.5f);

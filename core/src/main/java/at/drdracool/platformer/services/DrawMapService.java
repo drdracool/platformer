@@ -55,7 +55,6 @@ public class DrawMapService {
         shape.circle(exit.getLocation().x, exit.getLocation().y, exit.getRadius());
 
         CircleDTO[] characters = json.fromJson(CircleDTO[].class, contents.getCharacterLocations());
-        System.out.println("last character location: " + characters[0].getLocation().print());
         for (var character : characters) {
             shape.setColor(yellowGreen);
             shape.circle(character.getLocation().x, character.getLocation().y, character.getRadius());

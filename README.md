@@ -1,5 +1,8 @@
 # Platformer
 
+<img width="1376" height="1107" alt="image" src="https://github.com/user-attachments/assets/24f78ecf-a98b-42b6-9e02-8a3bd432427b" />
+
+
 A [libGDX](https://libgdx.com/) project generated with [gdx-liftoff](https://github.com/libgdx/gdx-liftoff).
 
 This project was generated with a template including simple application launchers and an `ApplicationAdapter` extension that draws libGDX logo.

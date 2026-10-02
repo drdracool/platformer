@@ -131,30 +131,24 @@ public class BuildScreen implements BasicScreen {
         Label instruction1 = new Label(instructionText1, skin, "c1");
         table.add(instruction1).spaceTop(row_height * 0.3f).colspan(4).right();
 
-        table.row();
-        String instructionText4 = "2/Place a MOVING block start/end";
-        Label instruction4 = new Label(instructionText4, skin, "c1");
-        table.add(instruction4).spaceTop(row_height * 0.1f).colspan(4).right();
+        String[] restInstructions = new String[]{"2/Place a MOVING block start/end",
+        "3/Place a DOOR start/end or a KEY", "4/Place an exit",
+            "5/REVERT the last step",  "6/REMOVE all the blocks on the character"};
 
-        table.row();
-        String instructionText2 = "3/Place a DOOR start/end or a KEY";
-        Label instruction2 = new Label(instructionText2, skin, "c1");
-        table.add(instruction2).spaceTop(row_height * 0.1f).colspan(4).right();
-
-        table.row();
-        String instructionText5 = "4/REVERT the last step";
-        Label instruction5 = new Label(instructionText5, skin, "c1");
-        table.add(instruction5).spaceTop(row_height * 0.1f).colspan(4).right();
-
-        table.row();
-        String instructionText3 = "5/REMOVE all the blocks on the character";
-        Label instruction3 = new Label(instructionText3, skin, "c1");
-        table.add(instruction3).spaceTop(row_height * 0.1f).colspan(4).right();
+        addRestInstructions(restInstructions, table, row_height);
 
         table.row();
         message = new Label("", skin, "c2");
         message.setScale(0);
         table.add(message).spaceTop(row_height * 0.3f).colspan(4).right();
+    }
+
+    private void addRestInstructions(String[] restInstructions, Table table, int row_height) {
+        for (var instruction : restInstructions) {
+            table.row();
+            Label instructionLabel = new Label(instruction, skin, "c1");
+            table.add(instructionLabel).spaceTop(row_height * 0.1f).colspan(4).right();
+        }
     }
 
     private void setMessage(String text) {

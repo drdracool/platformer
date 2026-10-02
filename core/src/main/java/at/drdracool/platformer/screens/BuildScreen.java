@@ -30,6 +30,9 @@ public class BuildScreen implements BasicScreen {
     Label message;
     TextField nameTextField;
 
+    Color orange = new Color(1, 0.6f, 0.204f, 1);
+    Color yellowGreen = new Color(0.659f, 0.616f, 0.204f, 1);
+
     public BuildScreen(Platformer game) {
         this.game = game;
     }
@@ -42,8 +45,11 @@ public class BuildScreen implements BasicScreen {
             case("UpdateMapName"):
                 nameTextField.setText(message);
                 break;
-            case("ReturnSaveResult"):
-                setMessage(message);
+            case("ReturnFailResult"):
+                setMessage(message, orange);
+                break;
+            case("ReturnSuccessResult"):
+                setMessage(message, yellowGreen);
                 break;
         }
     }
@@ -109,10 +115,10 @@ public class BuildScreen implements BasicScreen {
         saveButton.addListener(new InputListener(){
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                setMessage("");
+                setMessage("", yellowGreen);
                 System.out.println("nameTextField.getText(): " + nameTextField.getText());
                 if (Objects.equals(nameTextField.getText(), "")) {
-                    setMessage("Please input map name");
+                    setMessage("Please input map name", orange);
                 } else {
                     try {
                         game.socketSendClient.sendMessage("BUILD|SAVE|" + nameTextField.getText());
@@ -151,9 +157,10 @@ public class BuildScreen implements BasicScreen {
         }
     }
 
-    private void setMessage(String text) {
+    private void setMessage(String text, Color color) {
         message.setText(text);
         message.setScale(1);
+        message.setColor(color);
     }
 
     @Override

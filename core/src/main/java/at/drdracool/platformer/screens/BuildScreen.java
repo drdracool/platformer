@@ -1,6 +1,7 @@
 package at.drdracool.platformer.screens;
 
 import at.drdracool.platformer.inputHandlers.BuildInputHandler;
+import at.drdracool.platformer.inputHandlers.ButtonInputListener;
 import at.drdracool.platformer.inputHandlers.MoveInputHandler;
 import at.drdracool.platformer.interfaces.BasicScreen;
 import at.drdracool.platformer.models.CustomStage;
@@ -92,16 +93,15 @@ public class BuildScreen implements BasicScreen {
         table.top().right();
         TextButton backButton = new TextButton("Go Back", skin, "big4");
         backButton.getLabel().setAlignment(Align.center);
-        backButton.addListener(new InputListener(){
+        backButton.addListener(new ButtonInputListener(){
             @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 try {
                     game.socketSendClient.sendMessage("BUILD|QUIT");
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
                 game.setNewScreen(new SelectScreen(game, "BUILD"));
-                return true;
             }
         });
         table.add(backButton).width(col_width * 1.5f).height(row_height).expandX().left();
@@ -112,11 +112,10 @@ public class BuildScreen implements BasicScreen {
         table.add(nameTextField).width(col_width * 2).height(row_height).spaceRight(col_width * 0.3f);
         TextButton saveButton = new TextButton("Save", skin, "big1");
         saveButton.getLabel().setAlignment(Align.center);
-        saveButton.addListener(new InputListener(){
+        saveButton.addListener(new ButtonInputListener(){
             @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 setMessage("", yellowGreen);
-                System.out.println("nameTextField.getText(): " + nameTextField.getText());
                 if (Objects.equals(nameTextField.getText(), "")) {
                     setMessage("Please input map name", orange);
                 } else {
@@ -126,8 +125,6 @@ public class BuildScreen implements BasicScreen {
                         throw new RuntimeException(e);
                     }
                 }
-
-                return true;
             }
         });
         table.add(saveButton).width(col_width * 1.1f).height(row_height);

@@ -1,11 +1,11 @@
 package at.drdracool.platformer.screens;
 
+import at.drdracool.platformer.inputHandlers.ButtonInputListener;
 import at.drdracool.platformer.interfaces.BasicScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -51,22 +51,20 @@ public class MainScreen implements BasicScreen {
 
         TextButton playButton = new TextButton("PLAY", skin, "oval4");
         playButton.getLabel().setAlignment(Align.right);
-        playButton.addListener(new InputListener(){
+        playButton.addListener(new ButtonInputListener(){
             @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 game.setNewScreen(new SelectScreen(game, "PLAY"));
-                return true;
             }
         });
         table.add(playButton).padLeft(col_width * 0.8f).width(col_width * 2).height(row_height);
 
         TextButton buildMapButton = new TextButton("BUILD", skin, "oval3");
         buildMapButton.getLabel().setAlignment(Align.right);
-        buildMapButton.addListener(new InputListener(){
+        buildMapButton.addListener(new ButtonInputListener(){
             @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 game.setNewScreen(new SelectScreen(game, "BUILD"));
-                return true;
             }
         });
         table.row();

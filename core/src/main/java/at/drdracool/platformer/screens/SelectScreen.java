@@ -1,5 +1,6 @@
 package at.drdracool.platformer.screens;
 
+import at.drdracool.platformer.inputHandlers.ButtonInputListener;
 import at.drdracool.platformer.interfaces.BasicScreen;
 import at.drdracool.platformer.socketClients.SocketSendClient;
 import com.badlogic.gdx.Gdx;
@@ -63,9 +64,9 @@ public class SelectScreen implements BasicScreen {
         for (var mapName : mapNames) {
             TextButton mapButton = new TextButton(mapName, skin, "oval5");
             mapButton.getLabel().setAlignment(Align.center);
-            mapButton.addListener(new InputListener(){
+            mapButton.addListener(new ButtonInputListener(){
                 @Override
-                public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                     try {
                         game.socketSendClient.sendMessage(prefix + "|START|" + mapName);
                     } catch (IOException e) {
@@ -76,8 +77,6 @@ public class SelectScreen implements BasicScreen {
                     } else if (prefix.equals("BUILD")) {
                         game.setNewScreen(new BuildScreen(game));
                     }
-
-                    return true;
                 }
             });
             table.row();
@@ -86,11 +85,10 @@ public class SelectScreen implements BasicScreen {
 
         TextButton mapButton = new TextButton("Go Back", skin, "oval3");
         mapButton.getLabel().setAlignment(Align.center);
-        mapButton.addListener(new InputListener(){
+        mapButton.addListener(new ButtonInputListener(){
             @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 game.setNewScreen(new MainScreen(game));
-                return true;
             }
         });
 

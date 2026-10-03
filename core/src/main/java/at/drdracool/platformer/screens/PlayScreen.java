@@ -1,5 +1,6 @@
 package at.drdracool.platformer.screens;
 
+import at.drdracool.platformer.inputHandlers.ButtonInputListener;
 import at.drdracool.platformer.interfaces.BasicScreen;
 import at.drdracool.platformer.inputHandlers.MoveInputHandler;
 import at.drdracool.platformer.models.CustomDialog;
@@ -100,16 +101,15 @@ public class PlayScreen implements BasicScreen {
 
         TextButton mapButton = new TextButton("Go Back", skin, "big1");
         mapButton.getLabel().setAlignment(Align.center);
-        mapButton.addListener(new InputListener(){
+        mapButton.addListener(new ButtonInputListener(){
             @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 try {
                     game.socketSendClient.sendMessage("PLAY|QUIT|" + game.connectionId);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
                 game.setNewScreen(new SelectScreen(game, "PLAY"));
-                return true;
             }
         });
         table.add(mapButton).width(col_width * 2).height(row_height).padTop(row_height * 0.5f).padRight(col_width * 0.5f);

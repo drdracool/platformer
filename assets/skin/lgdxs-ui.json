@@ -66,9 +66,9 @@ com.badlogic.gdx.graphics.Color: {
 		a: 1
 	}
 	color4-pressed: {
-		r: 0.12156863
-		g: 1
-		b: 0.9764706
+		r: 0.6,
+		g: 0.78,
+		b: 0.871,
 		a: 1
 	}
 	color5: {
@@ -1641,7 +1641,7 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 		fontColor: black
 		disabledFontColor: clear
 		up: button-big-c
-		down: button-big-c-p,
+		down: button-big-c,
         over: button-big-c-p,
 		disabled: button-big-disabled-c
 	}
@@ -1666,7 +1666,8 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 		fontColor: black
 		disabledFontColor: clear
 		up: button-big-c4
-		down: button-big-c4-p
+		down: button-big-c4,
+        over: button-big-c4-p,
 		disabled: button-big-disabled-c4
 	}
 	big5: {

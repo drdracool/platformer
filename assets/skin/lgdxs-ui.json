@@ -1079,7 +1079,8 @@ com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
 	}
 	big1: {
 		up: button-big-c
-		down: button-big-c-p
+		down: button-big-c-p,
+        over: button-big-c-p,
 		disabled: button-big-disabled-c
 	}
 	big2: {
@@ -1112,11 +1113,13 @@ com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
 	}
 	oval3: {
 		up: button-oval-c3
-		down: button-oval-c3-p
+		down: button-oval-c3-p,
+        over: button-oval-c3-p
 	}
 	oval4: {
 		up: button-oval-c4
-		down: button-oval-c4-p
+		down: button-oval-c4-p,
+        over: button-oval-c4-p
 	}
 	oval5: {
 		up: button-oval-c5
@@ -1638,7 +1641,8 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 		fontColor: black
 		disabledFontColor: clear
 		up: button-big-c
-		down: button-big-c-p
+		down: button-big-c-p,
+        over: button-big-c-p,
 		disabled: button-big-disabled-c
 	}
 	big2: {
@@ -1678,35 +1682,40 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 		fontColor: black
 		disabledFontColor: clear
 		up: button-oval-c
-		down: button-oval-c-p
+		down: button-oval-c-p,
+        over: button-oval-c-p
 	}
 	oval2: {
 		font: sub-title
 		fontColor: black
 		disabledFontColor: clear
 		up: button-oval-c2
-		down: button-oval-c2-p
+		down: button-oval-c2-p,
+        over: button-oval-c2-p
 	}
 	oval3: {
 		font: sub-title
 		fontColor: black
 		disabledFontColor: clear
 		up: button-oval-c3
-		down: button-oval-c3-p
+		down: button-oval-c3-p,
+        over: button-oval-c3-p
 	}
 	oval4: {
 		font: sub-title
 		fontColor: black
 		disabledFontColor: clear
 		up: button-oval-c4
-		down: button-oval-c4-p
+		down: button-oval-c4-p,
+        over: button-oval-c4-p
 	}
 	oval5: {
 		font: sub-title
 		fontColor: black
 		disabledFontColor: clear
 		up: button-oval-c5
-		down: button-oval-c5-p
+		down: button-oval-c5-p,
+        over: button-oval-c5-p
 	}
 	corner-tl1: {
 		font: font

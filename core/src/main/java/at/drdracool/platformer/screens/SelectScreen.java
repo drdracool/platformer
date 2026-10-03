@@ -57,6 +57,8 @@ public class SelectScreen implements BasicScreen {
 
         if (!Objects.equals(category, "SELECT")) return;
 
+        table.left().padLeft(col_width);
+
         mapNames = message.split(",");
         for (var mapName : mapNames) {
             TextButton mapButton = new TextButton(mapName, skin, "oval5");
@@ -79,7 +81,7 @@ public class SelectScreen implements BasicScreen {
                 }
             });
             table.row();
-            table.add(mapButton).width(col_width * 6).height(row_height * 1.5f);
+            table.add(mapButton).width(col_width * 5).height(row_height * 1.5f);
         }
 
         TextButton mapButton = new TextButton("Go Back", skin, "oval3");
@@ -93,7 +95,7 @@ public class SelectScreen implements BasicScreen {
         });
 
         table.row();
-        table.add(mapButton).width(col_width * 6).height(row_height * 1.5f);
+        table.add(mapButton).width(col_width * 5).height(row_height * 1.5f);
     }
 
     @Override

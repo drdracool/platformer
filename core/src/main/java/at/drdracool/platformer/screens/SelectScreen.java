@@ -2,16 +2,13 @@ package at.drdracool.platformer.screens;
 
 import at.drdracool.platformer.inputHandlers.ButtonInputListener;
 import at.drdracool.platformer.interfaces.BasicScreen;
-import at.drdracool.platformer.socketClients.SocketSendClient;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Null;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.io.IOException;
@@ -21,11 +18,15 @@ public class SelectScreen implements BasicScreen {
     Platformer game;
     Stage stage;
     Skin skin;
+    Skin skinUI;
     ScreenViewport screenViewport;
     Table table;
 
     String[] mapNames;
     String prefix;
+
+    int col_width = Gdx.graphics.getWidth() / 12;
+    int row_height = Gdx.graphics.getHeight() / 12;
 
     public SelectScreen(Platformer game, String prefix) {
         this.game = game;
@@ -45,10 +46,13 @@ public class SelectScreen implements BasicScreen {
         Gdx.input.setInputProcessor(stage);
 
         skin = new Skin(Gdx.files.internal("skin/lgdxs-ui.json"));
+        skinUI = new Skin(Gdx.files.internal("ui/uiskin.json"));
 
         table = new Table();
         table.setFillParent(true);
+        table.left().padLeft(col_width);
         stage.addActor(table);
+        stage.setDebugAll(true);
     }
 
     public void handleMessage(String category, String message) {
@@ -57,8 +61,6 @@ public class SelectScreen implements BasicScreen {
         int row_height = Gdx.graphics.getHeight() / 12;
 
         if (!Objects.equals(category, "SELECT")) return;
-
-        table.left().padLeft(col_width);
 
         mapNames = message.split(",");
         for (var mapName : mapNames) {

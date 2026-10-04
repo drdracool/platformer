@@ -1,6 +1,7 @@
 package at.drdracool.platformer.models;
 
 public class MapContent {
+    String name;
     String characterLocations;
     String movingBlockLocations;
     String staticBlockLocations;
@@ -8,7 +9,7 @@ public class MapContent {
     String keyLocations;
     String exitLocation;
 
-    public MapContent(String characterLocations, String movingBlockLocations, String staticBlockLocations, String doorLocations, String keyLocations, String exitLocation) {
+    public MapContent(String name, String characterLocations, String movingBlockLocations, String staticBlockLocations, String doorLocations, String keyLocations, String exitLocation) {
         this.characterLocations = characterLocations;
         this.movingBlockLocations = movingBlockLocations;
         this.staticBlockLocations = staticBlockLocations;
@@ -18,6 +19,10 @@ public class MapContent {
     }
 
     public MapContent() {
+    }
+
+    public String getName() {
+        return name;
     }
 
     public String getCharacterLocations() {

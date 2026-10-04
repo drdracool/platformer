@@ -2,6 +2,7 @@ package at.drdracool.platformer.screens;
 
 import at.drdracool.platformer.inputHandlers.ButtonInputListener;
 import at.drdracool.platformer.interfaces.BasicScreen;
+import at.drdracool.platformer.models.MapContent;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -14,6 +15,8 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import java.io.IOException;
 import java.util.Objects;
 
+import static com.badlogic.gdx.net.HttpRequestBuilder.json;
+
 public class SelectScreen implements BasicScreen {
     Platformer game;
     Stage stage;
@@ -22,7 +25,8 @@ public class SelectScreen implements BasicScreen {
     ScreenViewport screenViewport;
     Table table;
 
-    String[] mapNames;
+    MapContent[] contents;
+
     String prefix;
 
     int col_width = Gdx.graphics.getWidth() / 12;
@@ -31,6 +35,13 @@ public class SelectScreen implements BasicScreen {
     public SelectScreen(Platformer game, String prefix) {
         this.game = game;
         this.prefix = prefix;
+    }
+
+    public void handleMessage(String category, String message) {
+        if (category.equals("SELECT")) {
+            contents = json.fromJson(MapContent[].class, message);
+            addMapOptionsToTable();
+        }
     }
 
     @Override
@@ -55,22 +66,15 @@ public class SelectScreen implements BasicScreen {
         stage.setDebugAll(true);
     }
 
-    public void handleMessage(String category, String message) {
-        System.out.println("select screen received message: " + category + message);
-        int col_width = Gdx.graphics.getWidth() / 12;
-        int row_height = Gdx.graphics.getHeight() / 12;
-
-        if (!Objects.equals(category, "SELECT")) return;
-
-        mapNames = message.split(",");
-        for (var mapName : mapNames) {
-            TextButton mapButton = new TextButton(mapName, skin, "oval5");
+    private void addMapOptionsToTable() {
+        for (var content : contents) {
+            TextButton mapButton = new TextButton(content.getName(), skin, "oval5");
             mapButton.getLabel().setAlignment(Align.center);
             mapButton.addListener(new ButtonInputListener(){
                 @Override
                 public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                     try {
-                        game.socketSendClient.sendMessage(prefix + "|START|" + mapName);
+                        game.socketSendClient.sendMessage(prefix + "|START|" + content.getName());
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -80,7 +84,16 @@ public class SelectScreen implements BasicScreen {
                         game.setNewScreen(new BuildScreen(game));
                     }
                 }
+                @Override
+                public void enter(InputEvent event, float x, float y, int pointer, @Null Actor fromActor) {
+                    System.out.println("entered map button");
+                }
+                @Override
+                public void exit(InputEvent event, float x, float y, int pointer, @Null Actor fromActor) {
+                    System.out.println("exited map button");
+                }
             });
+
             table.row();
             table.add(mapButton).width(col_width * 5).height(row_height * 1.5f);
         }

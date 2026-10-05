@@ -10,6 +10,7 @@ public class MapContent {
     String exitLocation;
 
     public MapContent(String name, String characterLocations, String movingBlockLocations, String staticBlockLocations, String doorLocations, String keyLocations, String exitLocation) {
+        this.name = name;
         this.characterLocations = characterLocations;
         this.movingBlockLocations = movingBlockLocations;
         this.staticBlockLocations = staticBlockLocations;

@@ -22,10 +22,7 @@ public class DrawMapService {
         this.shape = shape;
     }
 
-    public void drawMapContent(String message) {
-        if (message.isEmpty()) return;
-        MapContent contents = json.fromJson(MapContent.class, message);
-
+    public void drawMapContent(MapContent contents) {
         shape.begin(ShapeRenderer.ShapeType.Filled);
 
         BlockDTO[] movingBlocks = json.fromJson(BlockDTO[].class, contents.getMovingBlockLocations());

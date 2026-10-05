@@ -115,6 +115,10 @@ public class SelectScreen implements BasicScreen {
     public void render(float delta) {
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
+        if (contents != null) {
+            game.drawMapService.drawMapContent(contents[1]);
+        }
+
     }
 
     @Override

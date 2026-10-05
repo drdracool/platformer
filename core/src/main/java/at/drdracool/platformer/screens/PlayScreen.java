@@ -4,6 +4,7 @@ import at.drdracool.platformer.inputHandlers.ButtonInputListener;
 import at.drdracool.platformer.interfaces.BasicScreen;
 import at.drdracool.platformer.inputHandlers.MoveInputHandler;
 import at.drdracool.platformer.models.CustomDialog;
+import at.drdracool.platformer.models.MapContent;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.FPSLogger;
@@ -19,6 +20,8 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.io.IOException;
 
+import static com.badlogic.gdx.net.HttpRequestBuilder.json;
+
 public class PlayScreen implements BasicScreen {
     Platformer game;
     FPSLogger fpsLogger;
@@ -30,7 +33,7 @@ public class PlayScreen implements BasicScreen {
     Label timeElapsed;
     String finalTime = "";
 
-    String mapContent = "";
+    MapContent mapContent;
 
     CustomDialog dialog;
     int col_width = Gdx.graphics.getWidth() / 12;
@@ -43,7 +46,7 @@ public class PlayScreen implements BasicScreen {
     public void handleMessage(String category, String message) {
         switch (category) {
             case "UpdateMapContent":
-                mapContent = message;
+                mapContent = json.fromJson(MapContent.class, message);
                 break;
             case "UpdateTimer":
                 finalTime = message;
@@ -124,7 +127,9 @@ public class PlayScreen implements BasicScreen {
     private void draw() {
         ScreenUtils.clear(Color.BLACK);
 
-        game.drawMapService.drawMapContent(mapContent);
+        if (mapContent != null) {
+            game.drawMapService.drawMapContent(mapContent);
+        }
 
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();

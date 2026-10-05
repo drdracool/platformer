@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.Null;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Objects;
 
 import static com.badlogic.gdx.net.HttpRequestBuilder.json;
@@ -26,6 +27,7 @@ public class SelectScreen implements BasicScreen {
     Table table;
 
     MapContent[] contents;
+    MapContent currentMap;
 
     String prefix;
 
@@ -61,12 +63,25 @@ public class SelectScreen implements BasicScreen {
 
         table = new Table();
         table.setFillParent(true);
+        table.top().padTop(row_height);
         table.left().padLeft(col_width);
+        table.debug();
         stage.addActor(table);
-        stage.setDebugAll(true);
     }
 
     private void addMapOptionsToTable() {
+        TextButton backButton = new TextButton("Go Back", skin, "oval3");
+        backButton.getLabel().setAlignment(Align.center);
+        backButton.addListener(new ButtonInputListener(){
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                game.setNewScreen(new MainScreen(game));
+            }
+        });
+
+        table.add(backButton).width(col_width * 3.4f).height(row_height);
+
+
         for (var content : contents) {
             TextButton mapButton = new TextButton(content.getName(), skin, "oval5");
             mapButton.getLabel().setAlignment(Align.center);
@@ -86,37 +101,27 @@ public class SelectScreen implements BasicScreen {
                 }
                 @Override
                 public void enter(InputEvent event, float x, float y, int pointer, @Null Actor fromActor) {
+                    currentMap = content;
                     System.out.println("entered map button");
                 }
                 @Override
                 public void exit(InputEvent event, float x, float y, int pointer, @Null Actor fromActor) {
+                    currentMap = null;
                     System.out.println("exited map button");
                 }
             });
 
             table.row();
-            table.add(mapButton).width(col_width * 5).height(row_height * 1.5f);
+            table.add(mapButton).width(col_width * 3.4f).height(row_height);
         }
-
-        TextButton mapButton = new TextButton("Go Back", skin, "oval3");
-        mapButton.getLabel().setAlignment(Align.center);
-        mapButton.addListener(new ButtonInputListener(){
-            @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                game.setNewScreen(new MainScreen(game));
-            }
-        });
-
-        table.row();
-        table.add(mapButton).width(col_width * 5).height(row_height * 1.5f);
     }
 
     @Override
     public void render(float delta) {
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
-        if (contents != null) {
-            game.drawMapService.drawMapContent(contents[1]);
+        if (currentMap != null) {
+            game.drawMapService.drawMiniMap(currentMap);
         }
 
     }

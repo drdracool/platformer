@@ -159,5 +159,6 @@ public class PlayScreen implements BasicScreen {
     public void dispose() {
         stage.dispose();
         skin.dispose();
+        skinUI.dispose();
     }
 }

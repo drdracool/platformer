@@ -7,6 +7,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Align;
@@ -119,6 +120,14 @@ public class SelectScreen implements BasicScreen {
 
         Skin sgx = new Skin(Gdx.files.internal("default/uiskin.json"));
         final ScrollPane scroll = new ScrollPane(scrollableTable, sgx);
+        scroll.addListener(new InputListener() {
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                stage.setScrollFocus(scroll);
+            }
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                stage.setScrollFocus(null);
+            }
+        });
         scroll.setFadeScrollBars(false);
         table.add(scroll).width(col_width * 4).height(row_height * 7f).expandY().bottom();
 

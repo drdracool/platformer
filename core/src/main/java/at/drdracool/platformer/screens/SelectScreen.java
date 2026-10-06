@@ -4,6 +4,7 @@ import at.drdracool.platformer.inputHandlers.ButtonInputListener;
 import at.drdracool.platformer.interfaces.BasicScreen;
 import at.drdracool.platformer.models.MapContent;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -63,9 +64,8 @@ public class SelectScreen implements BasicScreen {
 
         table = new Table();
         table.setFillParent(true);
-        table.top().padTop(row_height);
+        table.top().padTop(row_height).padBottom(row_height);
         table.left().padLeft(col_width);
-        table.debug();
         stage.addActor(table);
     }
 
@@ -79,8 +79,11 @@ public class SelectScreen implements BasicScreen {
             }
         });
 
-        table.add(backButton).width(col_width * 3.4f).height(row_height);
+        table.add(backButton).width(col_width * 3.4f).height(row_height).left().row();
 
+        table.debug();
+        Table scrollableTable = new Table();
+        scrollableTable.debug();
 
         for (var content : contents) {
             TextButton mapButton = new TextButton(content.getName(), skin, "oval5");
@@ -110,14 +113,24 @@ public class SelectScreen implements BasicScreen {
                     System.out.println("exited map button");
                 }
             });
-
-            table.row();
-            table.add(mapButton).width(col_width * 3.4f).height(row_height);
+            scrollableTable.add(mapButton).size(col_width * 3.4f, row_height).row();
         }
+
+        scrollableTable.pack();
+        scrollableTable.setTransform(true);  //clipping enabled
+
+//        scrollableTable.setOrigin(scrollableTable.getWidth()/2,scrollableTable.getHeight()/2);
+//        scrollableTable.setScale(1.3f);
+
+        final ScrollPane scroll = new ScrollPane(scrollableTable, skinUI,"clean");
+        scroll.setupFadeScrollBars(0, 0);
+        table.add(scroll).width(col_width * 4).height(row_height * 2.5f).expandY().bottom();
+
     }
 
     @Override
     public void render(float delta) {
+
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
         if (currentMap != null) {

@@ -81,9 +81,7 @@ public class SelectScreen implements BasicScreen {
 
         table.add(backButton).width(col_width * 3.4f).height(row_height).left().row();
 
-        table.debug();
         Table scrollableTable = new Table();
-        scrollableTable.debug();
 
         for (var content : contents) {
             TextButton mapButton = new TextButton(content.getName(), skin, "oval5");
@@ -119,12 +117,10 @@ public class SelectScreen implements BasicScreen {
         scrollableTable.pack();
         scrollableTable.setTransform(true);  //clipping enabled
 
-//        scrollableTable.setOrigin(scrollableTable.getWidth()/2,scrollableTable.getHeight()/2);
-//        scrollableTable.setScale(1.3f);
-
-        final ScrollPane scroll = new ScrollPane(scrollableTable, skinUI,"clean");
-        scroll.setupFadeScrollBars(0, 0);
-        table.add(scroll).width(col_width * 4).height(row_height * 2.5f).expandY().bottom();
+        Skin sgx = new Skin(Gdx.files.internal("default/uiskin.json"));
+        final ScrollPane scroll = new ScrollPane(scrollableTable, sgx);
+        scroll.setFadeScrollBars(false);
+        table.add(scroll).width(col_width * 4).height(row_height * 7f).expandY().bottom();
 
     }
 

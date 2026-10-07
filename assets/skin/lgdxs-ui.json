@@ -34,7 +34,19 @@ com.badlogic.gdx.graphics.Color: {
 		g: 0.28235295
 		b: 0.92156863
 		a: 1
-	}
+	},
+  color-t: {
+    r: 0.21176471
+    g: 0.5254902
+    b: 1
+    a: 0.5
+  }
+  color-t-pressed: {
+    r: 0.03529412
+    g: 0.28235295
+    b: 0.92156863
+    a: 0.6
+  },
 	color2: {
 		r: 1
 		g: 0.6
@@ -138,7 +150,15 @@ com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
 	button-big-c-p: {
 		name: button-big
 		color: color-pressed
-	}
+	},
+  button-big-c-t: {
+    name: button-big
+    color: color-t
+  }
+  button-big-c-t-p: {
+    name: button-big
+    color: color-t-pressed
+  },
 	button-big-c2: {
 		name: button-big
 		color: color2
@@ -1545,7 +1565,17 @@ com.badlogic.gdx.scenes.scene2d.ui.ProgressBar$ProgressBarStyle: {
 		background: progress-bar-back-vertical-c
 		knobBefore: progress-bar-vertical
 	}
-}
+},
+  com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton$ImageTextButtonStyle: {
+    default: {
+      font: font
+      fontColor: black
+      disabledFontColor: clear
+      up: button-big-c-t
+      down: button-big-c-t
+      over: button-big-c-t-p
+    }
+  },
 com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 	default: {
 		font: sub-title
@@ -1644,7 +1674,16 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 		down: button-big-c,
         over: button-big-c-p,
 		disabled: button-big-disabled-c
-	}
+	},
+   big1-t: {
+    font: font
+    fontColor: black
+    disabledFontColor: clear
+    up: button-big-c-t
+    down: button-big-c-t,
+    over: button-big-c-t-p,
+    disabled: button-big-disabled-c
+  },
 	big2: {
 		font: font
 		fontColor: black

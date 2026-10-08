@@ -8,11 +8,9 @@ import java.io.IOException;
 
 public class MoveInputHandler extends InputAdapter {
     SocketSendClient socketSendClient;
-    boolean hasGravity;
 
-    public MoveInputHandler(SocketSendClient socketSendClient, boolean hasGravity) {
+    public MoveInputHandler(SocketSendClient socketSendClient) {
         this.socketSendClient = socketSendClient;
-        this.hasGravity = hasGravity;
     }
 
     @Override
@@ -72,11 +70,7 @@ public class MoveInputHandler extends InputAdapter {
 
     public void notifyServerMovement(String command) {
         try {
-            if (hasGravity) {
-                socketSendClient.sendMessage("PLAY|MOVE|" + command);
-            } else {
-                socketSendClient.sendMessage("BUILD|MOVE|" + command);
-            }
+            socketSendClient.sendMessage("SERVICE|MOVE|" + command);
 
         } catch (IOException e) {
             throw new RuntimeException(e);

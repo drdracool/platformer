@@ -36,7 +36,7 @@ public class Platformer extends Game {
         drawMapService = new DrawMapService(shape);
 
         initConnection();
-        setNewScreen(new MainScreen(this));
+        setNewScreen(new MainScreen(this, socketSendClient));
     }
 
     private void distributeServerMessage(String message) {
@@ -48,6 +48,7 @@ public class Platformer extends Game {
                 this.connectionId = fullMessage[1];
                 break;
             case("SCREEN"):
+                System.out.println("current screen: " + currentScreen);
                 currentScreen.handleMessage(fullMessage[1], fullMessage[2]);
         }
     }

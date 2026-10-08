@@ -6,6 +6,7 @@ import at.drdracool.platformer.inputHandlers.MoveInputHandler;
 import at.drdracool.platformer.interfaces.BasicScreen;
 import at.drdracool.platformer.models.CustomStage;
 import at.drdracool.platformer.models.MapContent;
+import at.drdracool.platformer.socketClients.SocketSendClient;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
@@ -31,6 +32,7 @@ public class BuildScreen implements BasicScreen {
     public Skin skin;
     Skin uiskin;
     Table table;
+    SocketSendClient socketSendClient;
 
     MapContent mapContent;
 
@@ -40,8 +42,11 @@ public class BuildScreen implements BasicScreen {
     Color orange = new Color(1, 0.6f, 0.204f, 1);
     Color yellowGreen = new Color(0.659f, 0.616f, 0.204f, 1);
 
-    public BuildScreen(Platformer game) {
+    ImageTextButton big1;
+
+    public BuildScreen(Platformer game, SocketSendClient socketSendClient) {
         this.game = game;
+        this.socketSendClient = socketSendClient;
     }
 
     public void handleMessage(String category, String message) {
@@ -65,21 +70,21 @@ public class BuildScreen implements BasicScreen {
     public void show() {
         skin = new Skin(Gdx.files.internal("skin/lgdxs-ui.json"));
         uiskin = new Skin(Gdx.files.internal("ui/uiskin.json"));
-        setUpInputProcessor();
+        screenViewport = new ScreenViewport();
+        stage = new CustomStage(screenViewport);
         setUpHeaderTable();
+        setUpInputProcessor();
     }
 
     private void setUpInputProcessor() {
         InputMultiplexer multiplexer = new InputMultiplexer();
 
-        MoveInputHandler moveInputHandler = new MoveInputHandler(game.socketSendClient, false);
+        MoveInputHandler moveInputHandler = new MoveInputHandler(game.socketSendClient);
         multiplexer.addProcessor(moveInputHandler);
 
-        BuildInputHandler buildInputHandler = new BuildInputHandler(game.socketSendClient);
+        BuildInputHandler buildInputHandler = new BuildInputHandler(game.socketSendClient, big1);
         multiplexer.addProcessor(buildInputHandler);
 
-        screenViewport = new ScreenViewport();
-        stage = new CustomStage(screenViewport);
         multiplexer.addProcessor(stage);
 
         Gdx.input.setInputProcessor(multiplexer);
@@ -103,11 +108,11 @@ public class BuildScreen implements BasicScreen {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 try {
-                    game.socketSendClient.sendMessage("BUILD|QUIT");
+                    game.socketSendClient.sendMessage("SERVICE|QUIT");
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-                game.setNewScreen(new SelectScreen(game, "BUILD"));
+                game.setNewScreen(new SelectScreen(game, socketSendClient));
             }
         });
         table.add(backButton).width(col_width * 1.5f).height(row_height).expandX().left();
@@ -126,7 +131,7 @@ public class BuildScreen implements BasicScreen {
                     setMessage("Please input map name", orange);
                 } else {
                     try {
-                        game.socketSendClient.sendMessage("BUILD|SAVE|" + nameTextField.getText());
+                        game.socketSendClient.sendMessage("SERVICE|SAVE|" + nameTextField.getText());
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -152,7 +157,7 @@ public class BuildScreen implements BasicScreen {
         table.add(message).spaceTop(row_height * 0.3f).colspan(4).right();
 
         table.row();
-        ImageTextButton big1 = new ImageTextButton("1", skin);
+        big1 = new ImageTextButton("1", skin);
         TextureRegionDrawable staticBlockImage = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("img/block.png"))));
         big1.getStyle().imageUp = staticBlockImage;
         big1.getStyle().imageDown = staticBlockImage;

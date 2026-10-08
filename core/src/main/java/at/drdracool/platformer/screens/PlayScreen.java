@@ -5,6 +5,7 @@ import at.drdracool.platformer.interfaces.BasicScreen;
 import at.drdracool.platformer.inputHandlers.MoveInputHandler;
 import at.drdracool.platformer.models.CustomDialog;
 import at.drdracool.platformer.models.MapContent;
+import at.drdracool.platformer.socketClients.SocketSendClient;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.FPSLogger;
@@ -32,6 +33,7 @@ public class PlayScreen implements BasicScreen {
     Table table;
     Label timeElapsed;
     String finalTime = "";
+    SocketSendClient socketSendClient;
 
     MapContent mapContent;
 
@@ -39,8 +41,9 @@ public class PlayScreen implements BasicScreen {
     int col_width = Gdx.graphics.getWidth() / 12;
     int row_height = Gdx.graphics.getHeight() / 12;
 
-    public PlayScreen(Platformer game) {
+    public PlayScreen(Platformer game, SocketSendClient socketSendClient) {
         this.game = game;
+        this.socketSendClient = socketSendClient;
     }
 
     public void handleMessage(String category, String message) {
@@ -74,7 +77,12 @@ public class PlayScreen implements BasicScreen {
         InputListener listener = new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setNewScreen(new MainScreen(game));
+                try {
+                    socketSendClient.sendMessage("SETSERVICE|MAIN");
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                game.setNewScreen(new MainScreen(game, socketSendClient));
             }
         };
         dialog.button("Return Home", listener);
@@ -87,7 +95,7 @@ public class PlayScreen implements BasicScreen {
         InputMultiplexer multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(stage);
 
-        MoveInputHandler moveInputHandler = new MoveInputHandler(game.socketSendClient, true);
+        MoveInputHandler moveInputHandler = new MoveInputHandler(game.socketSendClient);
         multiplexer.addProcessor(moveInputHandler);
 
         Gdx.input.setInputProcessor(multiplexer);
@@ -108,11 +116,11 @@ public class PlayScreen implements BasicScreen {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 try {
-                    game.socketSendClient.sendMessage("PLAY|QUIT|" + game.connectionId);
+                    game.socketSendClient.sendMessage("SERVICE|QUIT|" + game.connectionId);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-                game.setNewScreen(new SelectScreen(game, "PLAY"));
+                game.setNewScreen(new SelectScreen(game, socketSendClient));
             }
         });
         table.add(mapButton).width(col_width * 2).height(row_height).padTop(row_height * 0.5f).padRight(col_width * 0.5f);

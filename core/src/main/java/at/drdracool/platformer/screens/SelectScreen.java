@@ -3,6 +3,7 @@ package at.drdracool.platformer.screens;
 import at.drdracool.platformer.inputHandlers.ButtonInputListener;
 import at.drdracool.platformer.interfaces.BasicScreen;
 import at.drdracool.platformer.models.MapContent;
+import at.drdracool.platformer.socketClients.SocketSendClient;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -27,31 +28,36 @@ public class SelectScreen implements BasicScreen {
     Skin skinUI;
     ScreenViewport screenViewport;
     Table table;
+    SocketSendClient socketSendClient;
 
     MapContent[] contents;
     MapContent currentMap;
 
-    String prefix;
-
     int col_width = Gdx.graphics.getWidth() / 12;
     int row_height = Gdx.graphics.getHeight() / 12;
 
-    public SelectScreen(Platformer game, String prefix) {
+    public SelectScreen(Platformer game, SocketSendClient socketSendClient) {
         this.game = game;
-        this.prefix = prefix;
+        this.socketSendClient = socketSendClient;
     }
 
     public void handleMessage(String category, String message) {
         if (category.equals("SELECT")) {
             contents = json.fromJson(MapContent[].class, message);
             addMapOptionsToTable();
+        } else if (category.equals("GETSERVICE")) {
+            if (message.equals("PLAY")) {
+                game.setNewScreen(new PlayScreen(game, socketSendClient));
+            } else if (message.equals("BUILD")) {
+                game.setNewScreen(new BuildScreen(game, socketSendClient));
+            }
         }
     }
 
     @Override
     public void show() {
         try {
-            game.socketSendClient.sendMessage(prefix + "|SELECT");
+            game.socketSendClient.sendMessage("SERVICE|SELECT");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -76,7 +82,12 @@ public class SelectScreen implements BasicScreen {
         backButton.addListener(new ButtonInputListener(){
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                game.setNewScreen(new MainScreen(game));
+                try {
+                    socketSendClient.sendMessage("SETSERVICE|MAIN");
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                game.setNewScreen(new MainScreen(game, socketSendClient));
             }
         });
 
@@ -91,25 +102,18 @@ public class SelectScreen implements BasicScreen {
                 @Override
                 public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                     try {
-                        game.socketSendClient.sendMessage(prefix + "|START|" + content.getName());
+                        game.socketSendClient.sendMessage("SERVICE|START|" + content.getName());
                     } catch (IOException e) {
                         throw new RuntimeException(e);
-                    }
-                    if (prefix.equals("PLAY")) {
-                        game.setNewScreen(new PlayScreen(game));
-                    } else if (prefix.equals("BUILD")) {
-                        game.setNewScreen(new BuildScreen(game));
                     }
                 }
                 @Override
                 public void enter(InputEvent event, float x, float y, int pointer, @Null Actor fromActor) {
                     currentMap = content;
-                    System.out.println("entered map button");
                 }
                 @Override
                 public void exit(InputEvent event, float x, float y, int pointer, @Null Actor fromActor) {
                     currentMap = null;
-                    System.out.println("exited map button");
                 }
             });
             scrollableTable.add(mapButton).size(col_width * 3.4f, row_height).row();
@@ -141,7 +145,6 @@ public class SelectScreen implements BasicScreen {
         if (currentMap != null) {
             game.drawMapService.drawMiniMap(currentMap);
         }
-
     }
 
     @Override

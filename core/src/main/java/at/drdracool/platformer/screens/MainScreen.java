@@ -2,12 +2,10 @@ package at.drdracool.platformer.screens;
 
 import at.drdracool.platformer.inputHandlers.ButtonInputListener;
 import at.drdracool.platformer.interfaces.BasicScreen;
+import at.drdracool.platformer.socketClients.SocketSendClient;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -15,21 +13,20 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import java.io.IOException;
 
 
 public class MainScreen implements BasicScreen {
     final Platformer game;
     Stage stage;
-    TextButton textButton;
-    TextButton.TextButtonStyle textButtonStyle;
-    BitmapFont font;
     Skin skin;
-    TextureAtlas buttonAtlas;
     ScreenViewport screenViewport;
     Table table;
+    SocketSendClient socketSendClient;
 
-    public MainScreen(final Platformer game) {
+    public MainScreen(final Platformer game, SocketSendClient socketSendClient) {
         this.game = game;
+        this.socketSendClient = socketSendClient;
     }
 
     public void handleMessage(String category, String message){}
@@ -54,7 +51,12 @@ public class MainScreen implements BasicScreen {
         playButton.addListener(new ButtonInputListener(){
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                game.setNewScreen(new SelectScreen(game, "PLAY"));
+                try {
+                    socketSendClient.sendMessage("SETSERVICE|PLAY");
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                game.setNewScreen(new SelectScreen(game, socketSendClient));
             }
         });
         table.add(playButton).padLeft(col_width * 0.8f).width(col_width * 2).height(row_height);
@@ -64,7 +66,12 @@ public class MainScreen implements BasicScreen {
         buildMapButton.addListener(new ButtonInputListener(){
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                game.setNewScreen(new SelectScreen(game, "BUILD"));
+                try {
+                    socketSendClient.sendMessage("SETSERVICE|BUILD");
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                game.setNewScreen(new SelectScreen(game, socketSendClient));
             }
         });
         table.row();

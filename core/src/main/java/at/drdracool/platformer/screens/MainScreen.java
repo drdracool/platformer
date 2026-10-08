@@ -29,7 +29,11 @@ public class MainScreen implements BasicScreen {
         this.socketSendClient = socketSendClient;
     }
 
-    public void handleMessage(String category, String message){}
+    public void handleMessage(String category, String message){
+        if (category.equals("GETSERVICE")) {
+            game.setNewScreen(new SelectScreen(game, socketSendClient));
+        }
+    }
 
     @Override
     public void show() {
@@ -56,7 +60,6 @@ public class MainScreen implements BasicScreen {
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-                game.setNewScreen(new SelectScreen(game, socketSendClient));
             }
         });
         table.add(playButton).padLeft(col_width * 0.8f).width(col_width * 2).height(row_height);
@@ -71,7 +74,6 @@ public class MainScreen implements BasicScreen {
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-                game.setNewScreen(new SelectScreen(game, socketSendClient));
             }
         });
         table.row();

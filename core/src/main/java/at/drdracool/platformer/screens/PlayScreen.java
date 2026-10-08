@@ -2,7 +2,7 @@ package at.drdracool.platformer.screens;
 
 import at.drdracool.platformer.inputHandlers.ButtonInputListener;
 import at.drdracool.platformer.interfaces.BasicScreen;
-import at.drdracool.platformer.inputHandlers.MoveInputHandler;
+import at.drdracool.platformer.inputHandlers.KeyInputHandler;
 import at.drdracool.platformer.models.CustomDialog;
 import at.drdracool.platformer.models.MapContent;
 import at.drdracool.platformer.socketClients.SocketSendClient;
@@ -95,7 +95,7 @@ public class PlayScreen implements BasicScreen {
         InputMultiplexer multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(stage);
 
-        MoveInputHandler moveInputHandler = new MoveInputHandler(game.socketSendClient);
+        KeyInputHandler moveInputHandler = new KeyInputHandler(game.socketSendClient);
         multiplexer.addProcessor(moveInputHandler);
 
         Gdx.input.setInputProcessor(multiplexer);

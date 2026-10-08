@@ -48,7 +48,7 @@ public class Platformer extends Game {
                 this.connectionId = fullMessage[1];
                 break;
             case("SCREEN"):
-                System.out.println("current screen: " + currentScreen);
+                System.out.println("received message: " + message);
                 currentScreen.handleMessage(fullMessage[1], fullMessage[2]);
         }
     }

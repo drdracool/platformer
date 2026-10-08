@@ -1,8 +1,7 @@
 package at.drdracool.platformer.screens;
 
-import at.drdracool.platformer.inputHandlers.BuildInputHandler;
 import at.drdracool.platformer.inputHandlers.ButtonInputListener;
-import at.drdracool.platformer.inputHandlers.MoveInputHandler;
+import at.drdracool.platformer.inputHandlers.KeyInputHandler;
 import at.drdracool.platformer.interfaces.BasicScreen;
 import at.drdracool.platformer.models.CustomStage;
 import at.drdracool.platformer.models.MapContent;
@@ -13,7 +12,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
@@ -79,11 +77,8 @@ public class BuildScreen implements BasicScreen {
     private void setUpInputProcessor() {
         InputMultiplexer multiplexer = new InputMultiplexer();
 
-        MoveInputHandler moveInputHandler = new MoveInputHandler(game.socketSendClient);
+        KeyInputHandler moveInputHandler = new KeyInputHandler(game.socketSendClient);
         multiplexer.addProcessor(moveInputHandler);
-
-        BuildInputHandler buildInputHandler = new BuildInputHandler(game.socketSendClient, big1);
-        multiplexer.addProcessor(buildInputHandler);
 
         multiplexer.addProcessor(stage);
 

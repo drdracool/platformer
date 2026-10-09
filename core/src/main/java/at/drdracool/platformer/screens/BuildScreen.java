@@ -43,10 +43,11 @@ public class BuildScreen implements BasicScreen {
     Label message;
     TextField nameTextField;
 
+    int col_width = Gdx.graphics.getWidth() / 12;
+    int row_height = Gdx.graphics.getHeight() / 12;
     Color orange = new Color(1, 0.6f, 0.204f, 1);
     Color yellowGreen = new Color(0.659f, 0.616f, 0.204f, 1);
 
-    ImageTextButton big1;
     UIManager uiManager = new UIManager(new HashMap<>());
     Label toolTip;
 
@@ -101,9 +102,6 @@ public class BuildScreen implements BasicScreen {
     }
 
     private void setUpHeaderTable() {
-        int col_width = Gdx.graphics.getWidth() / 12;
-        int row_height = Gdx.graphics.getHeight() / 12;
-
         table = new Table();
         //table.debug();
         table.setFillParent(true);
@@ -111,6 +109,13 @@ public class BuildScreen implements BasicScreen {
         table.padTop(row_height * 0.5f).padRight(col_width * 0.5f).padLeft(col_width * 0.5f);
         stage.addActor(table);
 
+        addBackButton();
+        addSaveButton();
+        addMessageCell();
+        addHotKeys();
+    }
+
+    private void addBackButton() {
         table.top().right();
         TextButton backButton = new TextButton("Go Back", skin, "big4");
         backButton.getLabel().setAlignment(Align.center);
@@ -126,7 +131,9 @@ public class BuildScreen implements BasicScreen {
             }
         });
         table.add(backButton).width(col_width * 1.5f).height(row_height).expandX().left();
+    }
 
+    private void addSaveButton() {
         Label label = new Label("Map Name: ", skin, "subtitle-c2");
         table.add(label).width(col_width * 2).height(row_height);
         nameTextField = new TextField("", uiskin, "spinner");
@@ -149,57 +156,49 @@ public class BuildScreen implements BasicScreen {
             }
         });
         table.add(saveButton).width(col_width * 1.1f).height(row_height);
+    }
 
-//        table.row();
-//        String instructionText1 = "1/Place a STATIC block start/end";
-//        Label instruction1 = new Label(instructionText1, skin, "c1");
-//        table.add(instruction1).spaceTop(row_height * 0.3f).colspan(4).right();
-//
-//        String[] restInstructions = new String[]{"2/Place a MOVING block start/end",
-//        "3/Place a DOOR start/end or a KEY", "4/Place an exit",
-//            "5/REVERT the last step",  "6/REMOVE all the blocks on the character"};
-//
-//        addRestInstructions(restInstructions, table, row_height);
-
+    private void addMessageCell() {
         table.row();
         message = new Label("", skin, "c2");
         message.setScale(0);
         table.add(message).spaceTop(row_height * 0.3f).colspan(4).right();
-
-        table.row();
-        big1 = new ImageTextButton("1", skin);
-        TextureRegionDrawable staticBlockImage = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("img/block.png"))));
-        big1.getStyle().imageUp = staticBlockImage;
-        big1.getStyle().imageDown = staticBlockImage;
-        big1.clearChildren();
-        big1.add(big1.getLabel());
-        big1.add(big1.getImage());
-        big1.addListener(new InputListener(){
-            @Override
-            public void enter (InputEvent event, float x, float y, int pointer, @Null Actor fromActor) {
-                try {
-                    game.socketSendClient.sendMessage("SERVICE|GETTIP|" + big1.getText());
-
-                    toolTip.setPosition((big1.getX() + big1.getX() + big1.getWidth()) / 2 - 25, big1.getY() + big1.getHeight() + 25);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-            @Override
-            public void exit (InputEvent event, float x, float y, int pointer, @Null Actor fromActor) {
-                toolTip.setText("");
-            }
-        });
-
-        table.debug();
-        table.add(big1).size(col_width, row_height).spaceTop(row_height * 0.3f).colspan(4).expandY().bottom();
     }
 
-    private void addRestInstructions(String[] restInstructions, Table table, int row_height) {
-        for (var instruction : restInstructions) {
-            table.row();
-            Label instructionLabel = new Label(instruction, skin, "c1");
-            table.add(instructionLabel).spaceTop(row_height * 0.1f).colspan(4).right();
+    private void addHotKeys() {
+        String[] assetName = new String[]{"block", "movingBlock", "keydoor", "exit", "revert", "remove"};
+        table.row();
+        Table hotKeysTable = new Table();
+        table.add(hotKeysTable).colspan(4).expandY().bottom();
+
+        table.debug();
+        hotKeysTable.debug();
+
+        for (var i = 0; i < assetName.length; i++) {
+            ImageTextButton hotKey = new ImageTextButton(String.valueOf(i + 1), skin);
+            TextureRegionDrawable asset = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("img/" + assetName[i] + ".png"))));
+            System.out.println("asset path: " + "img/" + assetName[i] + ".png");
+            hotKey.getStyle().imageUp = asset;
+            hotKey.getStyle().imageDown = asset;
+            hotKey.clearChildren();
+            hotKey.add(hotKey.getLabel());
+            hotKey.add(hotKey.getImage());
+            hotKey.addListener(new InputListener(){
+                @Override
+                public void enter (InputEvent event, float x, float y, int pointer, @Null Actor fromActor) {
+                    try {
+                        game.socketSendClient.sendMessage("SERVICE|GETTIP|" + hotKey.getText());
+                        toolTip.setPosition((hotKey.getX() + hotKey.getX() + hotKey.getWidth()) / 2 - 25, hotKey.getY() + hotKey.getHeight() + 25);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                @Override
+                public void exit (InputEvent event, float x, float y, int pointer, @Null Actor fromActor) {
+                    toolTip.setText("");
+                }
+            });
+            hotKeysTable.add(hotKey).size(col_width, row_height).expandY().bottom().spaceRight(20f);
         }
     }
 

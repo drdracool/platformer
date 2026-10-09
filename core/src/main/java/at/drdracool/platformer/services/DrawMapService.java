@@ -11,11 +11,11 @@ import static com.badlogic.gdx.net.HttpRequestBuilder.json;
 
 public class DrawMapService {
     ShapeRenderer shape;
-    public Color blue = new Color(0.21176471f, 0.5254902f, 1, 1);
+    public Color blue = new Color(0.21176471f, 0.5254902f, 1, 1); // 3686ff
     Color darkBlue = new Color(0.035f, 0.282f, 0.922f, 1);
     Color orange = new Color(1, 0.6f, 0.204f, 1);
     Color yellowGreen = new Color(0.659f, 0.616f, 0.204f, 1);
-    public Color yellow = new Color(0.945f, 0.769f, 0.067f, 1);
+    public Color yellow = new Color(0.945f, 0.769f, 0.067f, 1); // a89d34
     Color purple = new Color(0.58f, 0.627f, 1, 1);
     Color beige = new Color(0.922f, 0.906f, 0.757f, 1);
 

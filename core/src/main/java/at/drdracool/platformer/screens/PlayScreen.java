@@ -1,6 +1,7 @@
 package at.drdracool.platformer.screens;
 
 import at.drdracool.platformer.inputHandlers.ButtonInputListener;
+import at.drdracool.platformer.inputHandlers.UIManager;
 import at.drdracool.platformer.interfaces.BasicScreen;
 import at.drdracool.platformer.inputHandlers.KeyInputHandler;
 import at.drdracool.platformer.models.CustomDialog;
@@ -20,6 +21,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import static com.badlogic.gdx.net.HttpRequestBuilder.json;
 
@@ -34,6 +36,7 @@ public class PlayScreen implements BasicScreen {
     Label timeElapsed;
     String finalTime = "";
     SocketSendClient socketSendClient;
+    UIManager uiManager = new UIManager(new HashMap<>());
 
     MapContent mapContent;
 
@@ -68,8 +71,8 @@ public class PlayScreen implements BasicScreen {
         fpsLogger = new FPSLogger();
         skin = new Skin(Gdx.files.internal("skin/lgdxs-ui.json"));
         skinUI = new Skin(Gdx.files.internal("ui/uiskin.json"));
-        setUpInputProcessor();
-        setUpHeaderTable();
+        setupInputProcessor();
+        setupHeaderTable();
         dialog = new CustomDialog("", skinUI, col_width, row_height, skin);
         dialog.text("CONGRATS! You've won");
         dialog.getContentTable().row();
@@ -89,19 +92,19 @@ public class PlayScreen implements BasicScreen {
 
     }
 
-    private void setUpInputProcessor() {
+    private void setupInputProcessor() {
         screenViewport = new ScreenViewport();
         stage = new Stage(screenViewport);
         InputMultiplexer multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(stage);
 
-        KeyInputHandler moveInputHandler = new KeyInputHandler(game.socketSendClient);
+        KeyInputHandler moveInputHandler = new KeyInputHandler(game.socketSendClient, uiManager);
         multiplexer.addProcessor(moveInputHandler);
 
         Gdx.input.setInputProcessor(multiplexer);
     }
 
-    private void setUpHeaderTable() {
+    private void setupHeaderTable() {
         table = new Table();
         table.setFillParent(true);
         table.top().right();

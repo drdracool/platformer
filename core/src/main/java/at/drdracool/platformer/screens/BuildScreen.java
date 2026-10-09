@@ -2,23 +2,29 @@ package at.drdracool.platformer.screens;
 
 import at.drdracool.platformer.inputHandlers.ButtonInputListener;
 import at.drdracool.platformer.inputHandlers.KeyInputHandler;
+import at.drdracool.platformer.inputHandlers.UIManager;
 import at.drdracool.platformer.interfaces.BasicScreen;
 import at.drdracool.platformer.models.CustomStage;
 import at.drdracool.platformer.models.MapContent;
 import at.drdracool.platformer.socketClients.SocketSendClient;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Null;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Objects;
 
 import static com.badlogic.gdx.net.HttpRequestBuilder.json;
@@ -41,6 +47,8 @@ public class BuildScreen implements BasicScreen {
     Color yellowGreen = new Color(0.659f, 0.616f, 0.204f, 1);
 
     ImageTextButton big1;
+    UIManager uiManager = new UIManager(new HashMap<>());
+    Label toolTip;
 
     public BuildScreen(Platformer game, SocketSendClient socketSendClient) {
         this.game = game;
@@ -51,6 +59,9 @@ public class BuildScreen implements BasicScreen {
         switch (category) {
             case("UpdateMapContent"):
                 mapContent = json.fromJson(MapContent.class, message);
+                break;
+            case("GetTip"):
+                toolTip.setText(message);
                 break;
             case("UpdateMapName"):
                 nameTextField.setText(message);
@@ -77,8 +88,8 @@ public class BuildScreen implements BasicScreen {
     private void setUpInputProcessor() {
         InputMultiplexer multiplexer = new InputMultiplexer();
 
-        KeyInputHandler moveInputHandler = new KeyInputHandler(game.socketSendClient);
-        multiplexer.addProcessor(moveInputHandler);
+        KeyInputHandler keyInputHandler = new KeyInputHandler(game.socketSendClient, uiManager);
+        multiplexer.addProcessor(keyInputHandler);
 
         multiplexer.addProcessor(stage);
 
@@ -159,6 +170,23 @@ public class BuildScreen implements BasicScreen {
         big1.clearChildren();
         big1.add(big1.getLabel());
         big1.add(big1.getImage());
+        big1.addListener(new InputListener(){
+            @Override
+            public void enter (InputEvent event, float x, float y, int pointer, @Null Actor fromActor) {
+                try {
+                    game.socketSendClient.sendMessage("SERVICE|GETTIP|" + big1.getText());
+                    toolTip = new Label("", skin, "c1");
+                    stage.addActor(toolTip);
+                    toolTip.setPosition(0, 0);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            @Override
+            public void exit (InputEvent event, float x, float y, int pointer, @Null Actor fromActor) {
+                toolTip.setText("");
+            }
+        });
 
         table.debug();
         table.add(big1).size(col_width, row_height).spaceTop(row_height * 0.3f).colspan(4).expandY().bottom();

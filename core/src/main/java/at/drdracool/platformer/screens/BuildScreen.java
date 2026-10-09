@@ -83,6 +83,10 @@ public class BuildScreen implements BasicScreen {
         stage = new CustomStage(screenViewport);
         setUpHeaderTable();
         setUpInputProcessor();
+        toolTip = new Label("", skin, "c1");
+        toolTip.setWidth(100f);
+        toolTip.setWrap(true);
+        stage.addActor(toolTip);
     }
 
     private void setUpInputProcessor() {
@@ -175,9 +179,8 @@ public class BuildScreen implements BasicScreen {
             public void enter (InputEvent event, float x, float y, int pointer, @Null Actor fromActor) {
                 try {
                     game.socketSendClient.sendMessage("SERVICE|GETTIP|" + big1.getText());
-                    toolTip = new Label("", skin, "c1");
-                    stage.addActor(toolTip);
-                    toolTip.setPosition(0, 0);
+
+                    toolTip.setPosition((big1.getX() + big1.getX() + big1.getWidth()) / 2 - 25, big1.getY() + big1.getHeight() + 25);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }

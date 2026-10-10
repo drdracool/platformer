@@ -1,41 +1,59 @@
-# Platformer
 
 <img width="1376" height="1107" alt="image" src="https://github.com/user-attachments/assets/24f78ecf-a98b-42b6-9e02-8a3bd432427b" />
 
+# Platformer
 
-A [libGDX](https://libgdx.com/) project generated with [gdx-liftoff](https://github.com/libgdx/gdx-liftoff).
+A simple multi-player platform game made with Spring Boot and libGDX. All game logic handled by Spring Boot.<br>
+Players can build their own map and play. <br>
 
-This project was generated with a template including simple application launchers and an `ApplicationAdapter` extension that draws libGDX logo.
+Other services/tools:
+- Database: H2
+- Skin: default/uiskin, ui/iskin, lgdxs-ui
+- Icon: created for the project with PixelArt.com
 
-## Platforms
+## Items in the game
+- `static block`: solid block. Fixed height and customizable width. Can be combined together.
+- `moving block`: solid block with fixed size moving with fixed speed. Can move to all different directions.
+- `door-key pair`: a door is a solid block, that can be removed by going into its corresponding key. 
+- `exit`: win the game by going into the exit
 
-- `core`: Main module with the application logic shared by all platforms.
-- `lwjgl3`: Primary desktop platform using LWJGL3; was called 'desktop' in older docs.
-- `html`: Web platform using GWT and WebGL. Supports only Java projects.
-- `server`: A separate application without access to the `core` module.
+## Feature
 
-## Gradle
+### Main screen
+The player can choose between the play mode and build mode.<br>
 
-This project uses [Gradle](https://gradle.org/) to manage dependencies.
-The Gradle wrapper was included, so you can run Gradle tasks using `gradlew.bat` or `./gradlew` commands.
-Useful Gradle tasks and flags:
+<img width="1372" height="1082" alt="image" src="https://github.com/user-attachments/assets/c23d94ee-6676-4fb7-a476-6161ba7812ef" />
 
-- `--continue`: when using this flag, errors will not stop the tasks from running.
-- `--daemon`: thanks to this flag, Gradle daemon will be used to run chosen tasks.
-- `--offline`: when using this flag, cached dependency archives will be used.
-- `--refresh-dependencies`: this flag forces validation of all dependencies. Useful for snapshot versions.
-- `build`: builds sources and archives of every project.
-- `cleanEclipse`: removes Eclipse project data.
-- `cleanIdea`: removes IntelliJ project data.
-- `clean`: removes `build` folders, which store compiled classes and built archives.
-- `eclipse`: generates Eclipse project data.
-- `html:dist`: compiles GWT sources. The compiled application can be found at `html/build/dist`: you can use any HTTP server to deploy it.
-- `html:superDev`: compiles GWT sources and runs the application in SuperDev mode. It will be available at [localhost:8080/html](http://localhost:8080/html). Use only during development.
-- `idea`: generates IntelliJ project data.
-- `lwjgl3:jar`: builds application's runnable jar, which can be found at `lwjgl3/build/libs`.
-- `lwjgl3:run`: starts the application.
-- `server:run`: runs the server application.
-- `test`: runs unit tests (if any).
+### Select screen
+For both play mode and build mode, player can select from the available maps. <br>
+The player can hover on map options to preview the map layout.
 
-Note that most tasks that are not specific to a single project can be run with `name:` prefix, where the `name` should be replaced with the ID of a specific project.
-For example, `core:clean` removes `build` folder only from the `core` project.
+<img width="1372" height="1082" alt="image" src="https://github.com/user-attachments/assets/4d982385-7f31-4407-83dc-f7924815c68b" />
+<br/><br/>
+In the build mode, the player can choose to create a new map or edit existing maps.<br>
+> The default map is not available since it is not editable by players.
+
+<img width="1372" height="1082" alt="image" src="https://github.com/user-attachments/assets/d187a62b-83a7-433b-8a41-d84b9d77ba14" />
+
+
+### Play screen
+The player can control the movement of the character with arrow keys: move left/right and jump up.<br>
+A timer counts the total time until the player hits the exit.
+
+<img width="1376" height="1107" alt="image" src="https://github.com/user-attachments/assets/24f78ecf-a98b-42b6-9e02-8a3bd432427b" />
+<br/><br/>
+Multiplayer is also supported. The player can see the movement of other players in the same map.
+<br/><br/>
+
+<img width="1372" height="1082" alt="image" src="https://github.com/user-attachments/assets/52285682-1e72-4879-a17c-7993d7091aa3" />
+<br/><br/>
+The player can win the game by going into the exit. A dialog would be shown with final total time.
+<br/><br/>
+<img width="1372" height="1082" alt="image" src="https://github.com/user-attachments/assets/9930ea68-2c2a-4fe4-b9d5-6397c47f539f" />
+
+### Build screen
+
+
+
+
+

@@ -62,7 +62,7 @@ All movements and operations in the map, including renaming, is synchronized to 
 <br/><br/>
 <img width="1040" height="440" alt="image" src="https://github.com/user-attachments/assets/693276ff-c857-489f-b96c-2382d55eaf9b" />
 
-<br/><br/>
+
 The player can click on the same button to save all new changes from all players to the current map.
 The saving would fail because:
 - Of unfinished block

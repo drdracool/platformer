@@ -2,13 +2,12 @@ package at.drdracool.platformer.screens;
 
 import at.drdracool.platformer.inputHandlers.ButtonInputListener;
 import at.drdracool.platformer.inputHandlers.KeyInputHandler;
-import at.drdracool.platformer.inputHandlers.UIManager;
 import at.drdracool.platformer.interfaces.BasicScreen;
+import at.drdracool.platformer.models.BlockDTO;
 import at.drdracool.platformer.models.CustomStage;
 import at.drdracool.platformer.models.MapContent;
 import at.drdracool.platformer.socketClients.SocketSendClient;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -25,6 +24,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import static com.badlogic.gdx.net.HttpRequestBuilder.json;
@@ -48,8 +48,8 @@ public class BuildScreen implements BasicScreen {
     Color orange = new Color(1, 0.6f, 0.204f, 1);
     Color yellowGreen = new Color(0.659f, 0.616f, 0.204f, 1);
 
-    UIManager uiManager = new UIManager(new HashMap<>());
     Label toolTip;
+    HashMap buttonTipMap;
 
     public BuildScreen(Platformer game, SocketSendClient socketSendClient) {
         this.game = game;
@@ -62,7 +62,8 @@ public class BuildScreen implements BasicScreen {
                 mapContent = json.fromJson(MapContent.class, message);
                 break;
             case("GetTip"):
-                toolTip.setText(message);
+                System.out.println("get tip messsage: " + message);
+                buttonTipMap = json.fromJson(HashMap.class, message);
                 break;
             case("UpdateMapName"):
                 nameTextField.setText(message);
@@ -78,22 +79,33 @@ public class BuildScreen implements BasicScreen {
 
     @Override
     public void show() {
+        try {
+            game.socketSendClient.sendMessage("SERVICE|GETTIP|");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         skin = new Skin(Gdx.files.internal("skin/lgdxs-ui.json"));
         uiskin = new Skin(Gdx.files.internal("ui/uiskin.json"));
         screenViewport = new ScreenViewport();
         stage = new CustomStage(screenViewport);
         setUpHeaderTable();
         setUpInputProcessor();
+        setUpToolTip();
+    }
+
+    private void setUpToolTip() {
         toolTip = new Label("", skin, "c1");
-        toolTip.setWidth(100f);
+        toolTip.setWidth(150f);
         toolTip.setWrap(true);
+        toolTip.setAlignment(Align.center);
         stage.addActor(toolTip);
     }
 
     private void setUpInputProcessor() {
         InputMultiplexer multiplexer = new InputMultiplexer();
 
-        KeyInputHandler keyInputHandler = new KeyInputHandler(game.socketSendClient, uiManager);
+        KeyInputHandler keyInputHandler = new KeyInputHandler(game.socketSendClient);
         multiplexer.addProcessor(keyInputHandler);
 
         multiplexer.addProcessor(stage);
@@ -171,34 +183,30 @@ public class BuildScreen implements BasicScreen {
         Table hotKeysTable = new Table();
         table.add(hotKeysTable).colspan(4).expandY().bottom();
 
-        table.debug();
-        hotKeysTable.debug();
-
         for (var i = 0; i < assetName.length; i++) {
-            ImageTextButton hotKey = new ImageTextButton(String.valueOf(i + 1), skin);
+            ImageTextButton hotKey = new ImageTextButton(String.valueOf(i + 1), skin, String.valueOf(i + 1));
             TextureRegionDrawable asset = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("img/" + assetName[i] + ".png"))));
             System.out.println("asset path: " + "img/" + assetName[i] + ".png");
+
+            hotKeysTable.add(hotKey).size(col_width * 1.2f, row_height).expandY().bottom().spaceRight(20f);
             hotKey.getStyle().imageUp = asset;
             hotKey.getStyle().imageDown = asset;
             hotKey.clearChildren();
             hotKey.add(hotKey.getLabel());
             hotKey.add(hotKey.getImage());
+
+            int index = i + 1;
             hotKey.addListener(new InputListener(){
                 @Override
                 public void enter (InputEvent event, float x, float y, int pointer, @Null Actor fromActor) {
-                    try {
-                        game.socketSendClient.sendMessage("SERVICE|GETTIP|" + hotKey.getText());
-                        toolTip.setPosition((hotKey.getX() + hotKey.getX() + hotKey.getWidth()) / 2 - 25, hotKey.getY() + hotKey.getHeight() + 25);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
+                    toolTip.setText(buttonTipMap.get(String.valueOf(index)).toString());
+                    toolTip.setPosition((hotKey.getX() + hotKey.getX() + hotKey.getWidth()) / 2, hotKey.getY() + hotKey.getHeight() + 25);
                 }
                 @Override
                 public void exit (InputEvent event, float x, float y, int pointer, @Null Actor fromActor) {
                     toolTip.setText("");
                 }
             });
-            hotKeysTable.add(hotKey).size(col_width, row_height).expandY().bottom().spaceRight(20f);
         }
     }
 

@@ -1,7 +1,6 @@
 package at.drdracool.platformer.screens;
 
 import at.drdracool.platformer.inputHandlers.ButtonInputListener;
-import at.drdracool.platformer.inputHandlers.UIManager;
 import at.drdracool.platformer.interfaces.BasicScreen;
 import at.drdracool.platformer.inputHandlers.KeyInputHandler;
 import at.drdracool.platformer.models.CustomDialog;
@@ -36,7 +35,6 @@ public class PlayScreen implements BasicScreen {
     Label timeElapsed;
     String finalTime = "";
     SocketSendClient socketSendClient;
-    UIManager uiManager = new UIManager(new HashMap<>());
 
     MapContent mapContent;
 
@@ -98,7 +96,7 @@ public class PlayScreen implements BasicScreen {
         InputMultiplexer multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(stage);
 
-        KeyInputHandler moveInputHandler = new KeyInputHandler(game.socketSendClient, uiManager);
+        KeyInputHandler moveInputHandler = new KeyInputHandler(game.socketSendClient);
         multiplexer.addProcessor(moveInputHandler);
 
         Gdx.input.setInputProcessor(multiplexer);

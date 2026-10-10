@@ -7,11 +7,9 @@ import java.io.IOException;
 
 public class KeyInputHandler extends InputAdapter {
     SocketSendClient socketSendClient;
-    UIManager uiManager;
 
-    public KeyInputHandler(SocketSendClient socketSendClient, UIManager uiManager) {
+    public KeyInputHandler(SocketSendClient socketSendClient) {
         this.socketSendClient = socketSendClient;
-        this.uiManager = uiManager;
     }
 
     @Override
@@ -22,7 +20,6 @@ public class KeyInputHandler extends InputAdapter {
             throw new RuntimeException(e);
         }
         System.out.println("KEYDOWN");
-        uiManager.handleHotKey(keycode, true);
         return true;
     }
 
@@ -35,7 +32,6 @@ public class KeyInputHandler extends InputAdapter {
         }
         System.out.println("KEYUP");
 
-        uiManager.handleHotKey(keycode, false);
         return true;
     }
 }

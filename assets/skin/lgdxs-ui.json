@@ -1575,7 +1575,62 @@ com.badlogic.gdx.scenes.scene2d.ui.ProgressBar$ProgressBarStyle: {
       down: button-big-c-t
       over: button-big-c-t-p,
       disabled: button-big-c-t-p
+    },
+    1: {
+      font: font
+      fontColor: black,
+      disabledFontColor: black,
+      up: button-big-c-t
+      down: button-big-c-t
+      over: button-big-c-t-p,
+      disabled: button-big-c-t-p
+    },
+    2: {
+      font: font
+      fontColor: black,
+      disabledFontColor: black,
+      up: button-big-c-t
+      down: button-big-c-t
+      over: button-big-c-t-p,
+      disabled: button-big-c-t-p
+    },
+    3: {
+      font: font
+      fontColor: black,
+      disabledFontColor: black,
+      up: button-big-c-t
+      down: button-big-c-t
+      over: button-big-c-t-p,
+      disabled: button-big-c-t-p
+    },
+    4: {
+      font: font
+      fontColor: black,
+      disabledFontColor: black,
+      up: button-big-c-t
+      down: button-big-c-t
+      over: button-big-c-t-p,
+      disabled: button-big-c-t-p
+    },
+    5: {
+      font: font
+      fontColor: black,
+      disabledFontColor: black,
+      up: button-big-c-t
+      down: button-big-c-t
+      over: button-big-c-t-p,
+      disabled: button-big-c-t-p
+    },
+    6: {
+      font: font
+      fontColor: black,
+      disabledFontColor: black,
+      up: button-big-c-t
+      down: button-big-c-t
+      over: button-big-c-t-p,
+      disabled: button-big-c-t-p
     }
+
   },
 com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 	default: {
